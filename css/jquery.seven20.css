@@ -1,0 +1,511 @@
+.grid-control-buttons .left-padding {
+    width: 6px;
+}
+.btn-group > .btn {
+    float:none;
+    display:inline-block;
+}
+.selectall {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.has-data {
+    background-color: #FFF0BA;
+}
+
+.grid-height {
+    height: 35em;
+}
+
+.grid-width {
+    /*min-width: 48em;
+    max-width: 80em;*/
+    width: 100%;
+}
+
+#gridUI {
+    padding-bottom: 50px;
+}
+
+#grid {
+    position: relative;
+    outline: none;
+    min-height: 40em;
+    min-width: 43em;
+    margin-left:0;
+}
+
+#grid-inner-container {
+    margin: 0px 0 6px 6px;
+    overflow: auto;
+    overflow-x: hidden;
+    max-height: 36em;
+}
+
+.grid-control-bar {
+    height: 50px;
+    position: absolute;
+}
+
+.grid-item-content-area {
+}
+
+.yellow-message {
+    position: absolute;
+    margin-left: 35%;
+    margin-top: -10%;
+    width: auto;
+    padding: 5px;
+    font-weight: bold;
+    color: black;
+    background-color: #F2BC00;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    display: none;
+}
+
+.grid-item-bar {
+    height: 2.5em;
+    background: #e5e5e5;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.grid-item-bar:hover {
+    cursor: pointer;
+}
+
+.checked-grid-item-bar {
+    background: none;
+    background-color: #FFF0BA;
+}
+
+.selected-grid-item-bar {
+    background: none;
+    background-color: #ADC1D6;
+}
+
+.done-grid-item-bar {
+    background: none;
+    background-color: #ccc;
+    color: #fff;
+}
+
+.selected-item {
+    left: 0px;
+}
+
+.left-padding {
+    width: 7px;
+    background: transparent 0 0 no-repeat;
+}
+
+.checkbox {
+    height: auto;
+    width: auto;
+    margin: 3px;
+}
+
+.grid-item-left-tag-area {
+}
+
+.grid-item-title-area {
+    font-weight: normal;
+    overflow: hidden;
+}
+
+.grid-item-right-area {
+    height: 14px;
+    width: 110px;
+    margin: 4px 3px 3px 5px;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+.grid-item-date-area {
+    height: 14px;
+    width: 80px;
+    margin: 7px 4px 3px 5px;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+.view-name {
+    width: 40%;
+    overflow: hidden;
+    display: inline;
+}
+
+.view-value {
+    float: right;
+    width: 60%;
+    overflow: hidden;
+    display: inline;
+}
+
+.view-row {
+}
+
+#viewer {
+    position: relative;
+    outline: none;
+    overflow: auto;
+    margin-top: 37px;
+    margin-left: 0;
+}
+
+#sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 37px;
+}
+
+.add-field
+{
+    display: inline;
+    margin-right: 15px;
+}
+
+.grid-items-list {
+    outline: none;
+    overflow: auto;
+    margin-top: 40px;
+}
+
+.slide-left-button {
+    position: absolute;
+    margin-left: -15px;
+    height: 90%;
+    line-height:12em;
+}
+
+.slide-left-button i
+{
+    vertical-align:middle;
+}
+.slide-left-button:hover,.slide-right-button:hover{
+    background-color:#E5E5E5;
+    cursor: pointer;
+}
+.slide-right-button {
+    position: absolute;
+    right: 15px;
+    height: 90%;
+    line-height:12em;
+}
+
+
+.no-data {
+    width: 111px;
+    margin: 0 auto;
+}
+
+
+
+
+
+.global-buttons {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.edit-buttons {
+    display: inline-block;
+}
+
+
+.loading-results {
+    background-image: url('/Content/images/Loading.gif');
+    width: 128px;
+    height: 14px;
+    text-indent: -10000px;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+
+
+.edit-form {
+    position: relative;
+}
+
+.edit-form .value {
+    float: right;
+}
+
+.edit-form table{
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #E5E5E5;
+}
+
+.error {
+    font: normal 10px arial;
+    padding: 3px;
+    margin: 3px;
+    background-color: #ffc;
+    border: 1px solid #c00;
+}
+
+#methodParams .param-entry {
+    display: inline-block;
+    width: 450px;
+}
+
+#methodParams .entry-name {
+    width: 20%;
+    display: inline-block;
+}
+
+#methodParams .value {
+    width: 80%;
+    display: inline-block;
+}
+
+#methodCallString {
+    width: 550px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: white;
+}
+
+#methodParams {
+    display: inline-block;
+}
+
+input[readonly=readonly] {
+    border: 1px solid #999;
+    background-color: #ddd;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 13px;
+}
+
+::-webkit-scrollbar-track-piece:disabled {
+    display: none !important;
+}
+
+::-webkit-scrollbar-button:disabled {
+    display: none !important;
+}
+
+::-webkit-scrollbar-track:disabled {
+    margin: 6px;
+}
+
+/* Horizontal Scrollbar Styles */
+
+::-webkit-scrollbar:horizontal {
+    border-color: transparent;
+    border-width: 0 2px;
+}
+
+::-webkit-scrollbar:horizontal:corner-present {
+    border-right-width: 0;
+}
+
+::-webkit-scrollbar-track:horizontal:disabled:corner-present {
+    margin-right: 5px;
+}
+
+::-webkit-scrollbar:horizontal:window-inactive {
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    border-color: transparent;
+    border-width: 0 13px;
+    min-width: 20px;
+}
+
+::-webkit-scrollbar-track:horizontal:disabled {
+    border-color: transparent;
+    border-width: 0 13px;
+}
+
+::-webkit-scrollbar-track-piece:horizontal:decrement {
+    border-color: transparent;
+    border-width: 0 0 0 13px;
+}
+
+::-webkit-scrollbar-track-piece:horizontal:increment {
+    border-color: transparent;
+    border-width: 0 13px 0 0;
+}
+
+::-webkit-scrollbar-button:horizontal {
+    width: 20px;
+    border-color: transparent;
+    border-width: 0 2px;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:horizontal:start:decrement, .double-start::-webkit-scrollbar-button:horizontal:start:decrement, .double-both::-webkit-scrollbar-button:horizontal:start:decrement {
+    width: 14px;
+    border-right-width: 0;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:horizontal:end:increment, .double-end::-webkit-scrollbar-button:horizontal:end:increment, .double-both::-webkit-scrollbar-button:horizontal:end:increment {
+    width: 14px;
+    border-left-width: 0;
+}
+
+::-webkit-scrollbar-button:horizontal:end:increment:corner-present {
+    border-right-width: 0;
+    width: 19px;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:horizontal:end:increment:corner-present, .double-end::-webkit-scrollbar-button:horizontal:end:increment:corner-present, .double-both::-webkit-scrollbar-button:horizontal:end:increment:corner-present {
+    width: 13px;
+}
+
+/* Vertical Scrollbar Styles */
+
+::-webkit-scrollbar:vertical {
+    border-color: transparent;
+    border-width: 2px 0;
+}
+
+::-webkit-scrollbar:vertical:corner-present {
+    border-bottom-width: 0;
+}
+
+::-webkit-scrollbar-track:vertical:disabled:corner-present {
+    margin-bottom: 5px;
+}
+
+::-webkit-scrollbar:vertical:window-inactive {
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    border-color: transparent;
+    border-width: 13px 0;
+    min-height: 20px;
+    background-color: #333;
+}
+
+::-webkit-scrollbar-track-piece:vertical:start:no-button, .double-end::-webkit-scrollbar-track-piece:vertical:start, .none::-webkit-scrollbar-track-piece:vertical:start {
+    margin-top: 6px;
+}
+
+::-webkit-scrollbar-track-piece:vertical:end:no-button, .double-start::-webkit-scrollbar-track-piece:vertical:end, .none::-webkit-scrollbar-track-piece:vertical:end {
+    margin-bottom: 6px;
+}
+
+::-webkit-scrollbar-track-piece:vertical:end:no-button:corner-present, .double-start::-webkit-scrollbar-track-piece:vertical:end:corner-present, .none::-webkit-scrollbar-track-piece:vertical:end:corner-present {
+    margin-bottom: 5px;
+}
+
+:not(.none):not(.double-end)::-webkit-scrollbar-track-piece:vertical:start:single-button, :not(.none):not(.double-end)::-webkit-scrollbar-track-piece:vertical:start:double-button, .single::-webkit-scrollbar-track-piece:vertical:start, .double-start::-webkit-scrollbar-track-piece:vertical:start, .double-both::-webkit-scrollbar-track-piece:vertical:start {
+    margin-top: -6px;
+}
+
+:not(.none):not(.double-start)::-webkit-scrollbar-track-piece:vertical:end:single-button, :not(.none):not(.double-start)::-webkit-scrollbar-track-piece:vertical:end:double-button, .single::-webkit-scrollbar-track-piece:vertical:end, .double-end::-webkit-scrollbar-track-piece:vertical:end, .double-both::-webkit-scrollbar-track-piece:vertical:end {
+    margin-bottom: -6px;
+}
+
+::-webkit-scrollbar-track:vertical:disabled {
+    border-color: transparent;
+    border-width: 13px 0;
+}
+
+::-webkit-scrollbar-track-piece:vertical:decrement {
+    border-color: transparent;
+    border-width: 13px 0 0 0;
+}
+
+::-webkit-scrollbar-track-piece:vertical:increment {
+    border-color: transparent;
+    border-width: 0 0 13px 0;
+}
+
+::-webkit-scrollbar-button:vertical {
+    height: 20px;
+    border-color: transparent;
+    border-width: 2px 0;
+}
+
+::-webkit-scrollbar-button:vertical:decrement {
+    background-position: 3px 3px, 0 0;
+}
+
+::-webkit-scrollbar-button:vertical:increment {
+    background-position: 3px 8px, 0 0;
+}
+
+::-webkit-scrollbar-button:vertical:increment:hover {
+}
+
+::-webkit-scrollbar-button:vertical:increment:active {
+}
+
+::-webkit-scrollbar-button:vertical:increment:window-inactive {
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:vertical:start:decrement, .double-start::-webkit-scrollbar-button:vertical:start:decrement, .double-both::-webkit-scrollbar-button:vertical:start:decrement {
+    height: 14px;
+    border-bottom-width: 0;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:vertical:start:increment, .double-start::-webkit-scrollbar-button:vertical:start:increment, .double-both::-webkit-scrollbar-button:vertical:start:increment {
+    background-position: 3px 4px, 0 0;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:vertical:end:decrement, .double-end::-webkit-scrollbar-button:vertical:end:decrement, .double-both::-webkit-scrollbar-button:vertical:end:decrement {
+    background-position: 3px 8px, 0 0;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:vertical:end:increment, .double-end::-webkit-scrollbar-button:vertical:end:increment, .double-both::-webkit-scrollbar-button:vertical:end:increment {
+    height: 14px;
+    border-top-width: 0;
+}
+
+::-webkit-scrollbar-button:vertical:end:increment:corner-present {
+    border-bottom-width: 0;
+    height: 19px;
+}
+
+:not(.single)::-webkit-scrollbar-button:double-button:vertical:end:increment:corner-present, .double-end::-webkit-scrollbar-button:vertical:end:increment:corner-present, .double-both::-webkit-scrollbar-button:vertical:end:increment:corner-present {
+    height: 13px;
+}
+
+/* Forced Scrollbar Mode Styles */
+
+.single::-webkit-scrollbar-button:start:decrement, .single::-webkit-scrollbar-button:end:increment {
+    display: block;
+}
+
+.single::-webkit-scrollbar-button:start:increment, .single::-webkit-scrollbar-button:end:decrement {
+    display: none;
+}
+
+.double-end::-webkit-scrollbar-button:start {
+    display: none;
+}
+
+.double-end::-webkit-scrollbar-button:end {
+    display: block;
+}
+
+.double-start::-webkit-scrollbar-button:start {
+    display: block;
+}
+
+.double-start::-webkit-scrollbar-button:end {
+    display: none;
+}
+
+.double-both::-webkit-scrollbar-button {
+    display: block;
+}
+
+.none::-webkit-scrollbar-button {
+    display: none;
+}
+​
