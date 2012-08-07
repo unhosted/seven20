@@ -110,8 +110,8 @@
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
 
-        remoteStorage.displayWidget('widget');
         remoteStorage.loadModule('root', 'r');
+        remoteStorage.displayWidget('widget');
 
         $('#dataGrid').seven20Grid({});
 
