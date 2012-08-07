@@ -1,3 +1,5 @@
+var seven20NavLinks = JSON.parse('[{"url":"index.html", "name":"Home"},{"url":"manage.htm", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
+
 function getData(request, callback, data, host, port)
 {
     makeAjax(request, callback, "GET", data, host, port);

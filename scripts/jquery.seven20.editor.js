@@ -35,7 +35,7 @@ function fadeAndRemove(target){
             'target': '',
             'targetForm': '',
             'fieldTypes': ['text'],
-            'propertiesHtml':'<input name="id" class="span6" type="text" placeholder="identifier..." ##value##><select class="span2" name="type">##types##</select>',
+            'propertiesHtml':'ID<input name="id" class="span6" type="text" placeholder="identifier..." ##value##>Type<select class="span2" name="type">##types##</select>',
             'buttonHtml': '<button onclick="javascript:addNewField(\'#form-##id##\'); return false;" class="btn btn-primary right-padding"><i class="icon-plus"></i></button><button type="submit" class="btn btn-success" data-original-title="Save"><i class="icon-ok"></i></button><button onclick="javascript:fadeAndRemove(\'#editor-##id##\'); return false;" class="btn btn-danger" data-original-title="Cancel"><i class="icon-remove"></i></button>',
 			'formEntryHtml': '<div class="control-group"><label class="control-label" for="input-##inputname##">##displayname##</label><div class="controls"><input type="##type##" class="input-large" id="input-##inputname##" name="##inputname##" value="##value##"></div></div>',
 			'formHtml':'<div id="editor-##id##" class="editor-box"><hr><h4>##heading##</h4><form id="form-##id##" class="form-horizontal" method="post" ><div class="form-actions">##buttons##</div></form></div>'
@@ -70,6 +70,7 @@ function fadeAndRemove(target){
 			
 			function buildForm() {
 				var myForm = o.formHtml;
+                var formId = o.contentId.replace(/\//g, "-");
 				if(o.contentId.indexOf("newcontent") != -1)
 				{
 					myForm = myForm.replace(/##heading##/g, "Create new " + o.contentName + " document");
@@ -82,12 +83,12 @@ function fadeAndRemove(target){
                     typeOptions += '<option>' + o.fieldTypes[i] + '</option>';
                 }
 
-				myForm = myForm.replace(/##buttons##/g, o.propertiesHtml + o.buttonHtml).replace(/##types##/g, typeOptions).replace(/##id##/g, o.contentId);
-				myForm = myForm.replace("##value##", 'value="' + o.contentName + o.contentId + '"');
+				myForm = myForm.replace(/##buttons##/g, o.propertiesHtml +  o.buttonHtml).replace(/##types##/g, typeOptions).replace(/##id##/g, formId);
+				myForm = myForm.replace("##value##", 'value="' + o.contentId + '"');
 
 
 				$(o.target).append(myForm);
-				o.targetForm = '#form-' + o.contentId;
+				o.targetForm = '#form-' + formId;
 
                 $.each(o.data, function(k, v) {
                     buildFormEntry(k, v, '', 'text');

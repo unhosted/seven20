@@ -20,9 +20,9 @@
             'editButtons': null,
             'globalButtonNames': ["refresh", "add"],
             'globalButtonIcons': ["refresh", "plus"],
-            'editButtonNames': ["pin", "share", "edit", "archive", "delete"],
-            'editButtonIcons': ["heart", "share", "edit", "inbox", "trash"],
-            'viewerTemplate': '<div id="viewer" class="well grid-height span4"><div class="slide-left-button"><i class="icon-chevron-right"></i></div><h2><span class="view-path"></span></h2></spab><div id="view-items-list" class=""></div></div>',
+            'editButtonNames': ["share", "edit", "publish", "archive", "delete"],
+            'editButtonIcons': ["share", "edit", "globe", "inbox", "trash"],
+            'viewerTemplate': '<div id="viewer" class="well grid-height span3"><div class="slide-left-button"><i class="icon-chevron-right"></i></div><h2><span class="view-path"></span></h2></spab><div id="view-items-list" class=""></div></div>',
             'gridTemplate': '<div id="grid" class="well grid-width span3"><div id="grid-inner-container" class="grid-width"><div class="grid-control-bar grid-width"><div class="control-group grid-width"><div class="left-padding"></div><div class="input-prepend input-append" style="display: inline-block;"><input type="checkbox" class="selectall"><input type="text" rows="30" id="filterText" class="input-medium"><a class="btn filter-button" href="#" data-original-title="Filter"><i class="icon-filter"></i></a></div><div class="global-buttons"></div><div class="edit-buttons"></div></div></div><div class="error-message"></div><table class="grid-items-list grid-width"></table></div></div>',
             'barButtonHtml': '<a class="btn ##name##-button" href="#" data-original-title="##tip##"><i class="icon-##icon##"></i></a>',
             'grid_item_html': '<tr class="grid-item grid-item-bar" ##data##><td class="left-padding"></td><td class="checkbox"><input type="checkbox" class="checkbox" /></td><td class="grid-item-content-area">##item-html##</td></tr>',
@@ -91,21 +91,6 @@
 
             }
 
-//            function insertData(data) {
-//                $(o.innerContainerSelector).html('<div class="no-data">No Data To Show</div>');
-//
-//                if (data.error) {
-//                    showMessage('Error: ' + data.error, 'Get Data Eror', 'error');
-//                    return;
-//                }
-//
-//                $(o.innerContainerSelector).html('');
-//
-//                $.each(data, function (i, item) {
-//                    insertRow(item, i);
-//                });
-//            }
-
             function LoadData() {
                 $('#viewer').find('span.view-path').html(o.dataPath);
                 var data = remoteStorage.root.getListing(o.dataPath);
@@ -135,17 +120,40 @@
                 addEditorItem();
             }
 
+            function getRowID(row){
+                var dataHolder = $(row).parent().parent();
+                var itemID = dataHolder.find('.id-tag').html();
+                return itemID;
+            }
+
             function editItems(selectedItems) {
                 $.each(selectedItems, function (i, item) {
-                    var itemID = $(item).parent().parent().data()._id;
+                    var itemID = getRowID(item);
                     addEditorItem(itemID, $(item).parent().parent().data());
+                });
+            }
+
+            function publishItems(selectedItems) {
+                $.each(selectedItems, function (i, item) {
+                    var itemID = getRowID(item);
+                    var message = remoteStorage.root.publishObject(itemID);
+
+                    showMessage(message, 'Publish successful');
+                });
+            }
+
+            function archiveItems(selectedItems) {
+                $.each(selectedItems, function (i, item) {
+                    var itemID = getRowID(item);
+                    var message = remoteStorage.root.archiveObject(itemID);
+
+                    showMessage('Deleted record at _id=' + itemID, 'Delete Successful');
                 });
             }
 
             function deleteItems(selectedItems) {
                 $.each(selectedItems, function (i, item) {
-                    var dataHolder = $(item).parent().parent();
-                    var itemID = dataHolder.find('.id-tag').html();
+                    var itemID = getRowID(item);
 
                     remoteStorage.root.removeObject(itemID);
                     showMessage('Deleted record at _id=' + itemID,'Delete Successful');
@@ -223,6 +231,7 @@
             function configureButtonEvents() {
                 // Refresh the grid results
                 $t.find('.refresh-button').bind('click', function () {
+                    $(this).parent().parent().find('#filterText').val('');
                     LoadData();
                 });
 
@@ -257,22 +266,22 @@
                 // Complete the selected item
                 $t.find('.archive-button').bind('click', function () {
                     //TODO: wireup archiving
-
+                    var selectedItems = getSelectedItems();
+                    archiveItems(selectedItems);
                     clearCheckedItems(' items archived', true);
                     disableGridButtons();
                 });
 
                 // Complete the selected item
-                $t.find('.pin-button').bind('click', function () {
-                    if (o.pinFunction != null)
-                        o.pinFunction();
-
-                    clearCheckedItems(' items pinned', true);
+                $t.find('.publish-button').bind('click', function () {
+                    var selectedItems = getSelectedItems();
+                    publishItems(selectedItems);
+                    clearCheckedItems(' items published', true);
                     disableGridButtons();
                 });
 
                 $t.find('.filter-button').bind('click', function () {
-                    var filter = $(this).parent().siblings('#filterText').val();
+                    var filter = $(this).parent().find('#filterText').val();
                     if (filter == o.filter) {
                         return;
                     }

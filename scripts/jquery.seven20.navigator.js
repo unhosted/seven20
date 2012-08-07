@@ -5,7 +5,11 @@
             'navSelector': $('#nav'),
             'navEntrySelector': 'ul.nav-list li',
             'navHeaderSelector': '.nav-header',
-            'navEntryNames': ["collections", "public", "new"],
+			'tabContent': [],
+			'navigationFolders':[],
+			'folderOnClick': '',
+            'navEntryNames': ["folders", "public"],
+			'folderTemplate' : '<li><a class="nav-header" onclick="##onClick##"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>',
             'navEntryTemplate': '<li class="nav-header" >##name##</li>',
             'navTabPaneTemplate': '<div class="tab-pane ##class##" id="##tab##"><p>##content##</p></div>',
             'navTemplate': '<div class="slide-right-button"><i class="icon-chevron-left"></i></div><ul class="nav nav-tabs">##tabs##</ul><div class="tab-content">##tabs-content##</div>',
@@ -15,19 +19,6 @@
 
         return this.each(function () {
             var $t = $(this);
-
-            function populateNav(data, selector, action) {
-                // Show loading animation
-
-                $.each(data, function (i, item) {
-                    var entryClass = 'nav-entry';
-                    if (item.name.toUpperCase() === objectname.toUpperCase())
-                        entryClass += ' active';
-
-                    var item_html = "<li><a class='" + entryClass + "' href='/" + action + "/" + item.name + "'><span>" + item.name + "</span></a></li>";
-                    $(item_html).insertAfter(selector);
-                });
-            }
 
             function init() {
 
@@ -50,7 +41,83 @@
                 $t.find('.slide-right-button').bind('click', function () {
                     $(this).parent().slideLeft();
                 });
+				
+				$.each(o.navigationFolders, function (i, item) {
+					buildFolder('#tab' + i, item, '');
+				});
+				$("#tab0").delegate('a.nav-header', 'dblclick', function () {
+					$(this).next().slideToggle();
+				});
+                $("#tab1").delegate('a.nav-header', 'dblclick', function () {
+                    $(this).next().slideToggle();
+                });
+				setNavigationIcons();
             }
+			
+			function buildFolder(target, path, fullPath)
+			{
+				var child = buildFolderContents(path, fullPath);
+				var selector = '[data-path="' + fullPath + path + '"]';
+				if($(target).find(selector).length == 0)
+					$(target).append(child.element);
+				else
+					$(target).find(selector).append(child.element).prev('a').data('object-ids', child.objectIds).addClass(child.css);
+
+				return target;
+			}
+
+			function buildFolderContents(path, pathRoot) {
+				if(path.substr(-1) != '/') {
+					return '';
+				}
+
+				if(pathRoot === undefined)
+					pathRoot = '';
+
+				var fullPath = pathRoot + path;
+				var listing = remoteStorage.root.getListing(fullPath);
+				var navList = '', prevList='';
+				var nav = $('');
+				var ret = JSON.parse('{}');
+
+				var objectIds = [];
+				for(var i=0; i<listing.length; i++) {
+					var css = "";
+					navList = '';
+					if(listing[i].charAt(listing[i].length - 1) == '/')
+					{
+						var onClick = '';
+						if(o.folderOnClick !== '')
+							onClick = o.folderOnClick + "(\'##fullpath##\');";
+						navList = $(o.folderTemplate.replace("##onClick##", onClick).replace(/##path##/g,path+listing[i]).replace(/##name##/g,listing[i]).replace(/##fullpath##/g, fullPath + listing[i]));
+						nav = nav.add(buildFolder(navList, listing[i], fullPath));
+					}
+					else
+					{
+						objectIds.push(listing[i]);
+						css = "has-data";
+					}
+				}
+				ret['element'] = nav;
+				ret['objectIds'] = objectIds;
+				ret['css'] = css;
+
+				return ret;
+			}
+
+			function setNavigationIcons()
+			{
+				$('.nav-header').each(function(i, item){
+					if (item.text ==  "MONEY/")
+					{
+						$(item).find('i').removeClass('icon-blank').addClass('icon-fire');
+					}
+					if (item.text ==  "PUBLIC/")
+					{
+						$(item).find('i').removeClass('icon-blank').addClass('icon-globe');
+					}
+				});
+			}
 
             init();
         });

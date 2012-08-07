@@ -11,21 +11,33 @@ var bootstrapNavHtml = '<div class="navbar navbar-fixed-top">' +
           '<div id="widget"></div>' +
           '<div class="nav-collapse">' +
             '<ul class="nav">' +
-              '<li class="active"><a href="#">Home</a></li>' +
-              '<li><a href="#about">About</a></li>' +
-              '<li><a href="#contact">Contact</a></li>' +
+              '##links##' +
             '</ul>' +
           '</div><!--/.nav-collapse -->' +
         '</div>' +
       '</div>' +
     '</div>';
 
-function bootstrapNav(target, projectName)
+var bootstrapNavLinkHtml = '<li class="##class##"><a href="##url##">##name##</a></li>';
+
+function bootstrapNav(target, projectName, links)
 {
 	var navHtml = bootstrapNavHtml;
+    var navLinks = "";
 
 	if( projectName !== '' && projectName !== undefined)
 		navHtml = navHtml.replace(/Project name/g, projectName);
+
+    if(links instanceof Array){
+        for(i = 0; i < links.length; i++){
+            var css = '';
+            if(window.location.pathname.substr(window.location.pathname.lastIndexOf("/") + 1) == links[i].url)
+                css = "active";
+            navLinks += bootstrapNavLinkHtml.replace("##url##", links[i].url).replace("##class##", css).replace("##name##", links[i].name);
+        }
+    }
+
+    navHtml = navHtml.replace(/##links##/g,navLinks);
 
 	$(target).html(navHtml);
 }

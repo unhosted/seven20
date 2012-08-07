@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="seven20 - a mongo-trapi interface">
+    <meta name="description" content="seven20 - a data management interface for remoteStorage">
     <meta name="author" content="epic720">
 
 
@@ -55,11 +55,11 @@
         .form-horizontal .form-actions {
             padding-left: 0 !important;
         }
-        .form-actions input[class*="span"], select[class*="span"], textarea[class*="span"],
-        .uneditable-input[class*="span"], .row-fluid input[class*="span"], .row-fluid select[class*="span"],
-        .row-fluid textarea[class*="span"], .row-fluid .uneditable-input[class*="span"] {
-            float: left;
-        }
+        /*.form-actions input[class*="span"], select[class*="span"], textarea[class*="span"],*/
+        /*.uneditable-input[class*="span"], .row-fluid input[class*="span"], .row-fluid select[class*="span"],*/
+        /*.row-fluid textarea[class*="span"], .row-fluid .uneditable-input[class*="span"] {*/
+            /*float: left;*/
+        /*}*/
     </style>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -84,7 +84,7 @@
     <div class="row-fluid">
         <div id="dataGrid">
             <div id="gridUI" class="grid-height row-fluid">
-                <div id="sidebar" class="span2"></div>
+                <div id="sidebar" class="span1"></div>
             </div>
         </div>
     </div><!--/row-->
@@ -108,37 +108,20 @@
 
 <script>
     $().ready(function(){
-        bootstrapNav('#topnav', 'Seven20');
+        bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
 
         remoteStorage.displayWidget('widget');
         remoteStorage.loadModule('root', 'r');
-        //remoteStorage.root.setObject('text','/public/somedata',JSON.parse('{"content":"ken eucker","action":"is so cool"}'));
-        //remoteStorage.root.setObject('text','/public/someotherdata',JSON.parse('{"content":"unhosted apps are the best","action":"freedom!"}'));
-        //remoteStorage.root.setObject('text','/public/fold/someotherdata',JSON.parse('{"content":"another level down","action":"freedom!"}'));
-        //remoteStorage.root.getObject('/Text/field2');
-        var contentName = "";
 
-        $('#dataGrid').seven20Grid({
-            dataPath: contentName
-        });
+        $('#dataGrid').seven20Grid({});
 
         var tab0 = '<ul data-path="/" class="nav nav-list"></ul>';
-        var tab1 = '';//'<ul data-path="/public/" class="nav nav-list"></ul>';
+        var tab1 = '<ul class="nav nav-list"><li><a class="nav-header" onclick="showGridData(\'/public/\');"><i class="icon-globe"></i>public/</a><ul data-path="/public/" class="nav nav-list"></ul></li></ul>';
         var tab2 = '';
-        $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2]});
-        var nav = encapsulateFolderNavigation($('#tab0'),"/", '');
-        $("#tab0").delegate('a.nav-header', 'dblclick', function () {
-            $(this).next().slideToggle();
-        });
-        //displayFolded("/public/");
-        setNavigationIcons();
-
-        //$('#dataGrid').seven20Grid.insert(remoteStorage.root.getObject('/public/somedata'),'/public/somedata');
+        $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
     });
 
-    var navListrHtml = '<ul data-path="##path##" class="nav nav-list"></ul>';
-    var folderHtml = '<li><a class="nav-header" onclick="showGridData(\'##fullpath##\');"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>';
-
+    
     function showGridData(path)
     {
         var target = '[data-path="' + path + '"]';
@@ -153,68 +136,7 @@
         }
     }
 
-    function encapsulateFolderNavigation(target, path, fullPath)
-    {
-        var child = addFolderNavigation(path, fullPath);
-        var selector = '[data-path="' + fullPath + path + '"]';
-        if($(target).find(selector).length == 0)
-            $(target).append(child.element);
-        else
-            $(target).find(selector).append(child.element).prev('a').data('object-ids', child.objectIds).addClass(child.css);
-
-        return target;
-    }
-
-    function addFolderNavigation(path, pathRoot) {
-        if(path.substr(-1) != '/') {
-            return '';
-        }
-
-        if(pathRoot === undefined)
-            pathRoot = '';
-
-        var fullPath = pathRoot + path;
-        var listing = remoteStorage.root.getListing(fullPath);
-        var navList = '', prevList='';
-        var nav = $('');
-        var ret = JSON.parse('{}');
-
-        var objectIds = [];
-        for(var i=0; i<listing.length; i++) {
-            var css = "";
-            navList = '';
-            if(listing[i].charAt(listing[i].length - 1) == '/')
-            {
-                var target = '[data-path="' + fullPath + listing[i] + '"]';
-                navList = $(folderHtml.replace(/##path##/g,path+listing[i]).replace(/##name##/g,listing[i]).replace(/##fullpath##/g, fullPath + listing[i]));
-                nav = nav.add(encapsulateFolderNavigation(navList, listing[i], fullPath));
-            }
-            else
-            {
-                objectIds.push(listing[i]);
-                css = "has-data";
-            }
-        }
-        ret['element'] = nav;
-        ret['objectIds'] = objectIds;
-        ret['css'] = css;
-
-        return ret;
-    }
-
-    function setNavigationIcons()
-    {
-        $('.nav-header').each(function(i, item){
-            if (item.text ==  "MONEY/")
-            {
-                $(item).find('i').removeClass('icon-blank').addClass('icon-fire');
-            }
-            if (item.text ==  "PUBLIC/")
-            {
-                $(item).find('i').removeClass('icon-blank').addClass('icon-globe');
-            }
-        });
-    }
+    
 </script>
 </body>
 </html>
