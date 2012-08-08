@@ -72,6 +72,7 @@
             $.fn.seven20Grid.setDataPath = function(dataPath) {
                 o.dataPath = dataPath;
                 $('#viewer').find('span.view-path').html(o.dataPath);
+                $('#viewer').find('#view-items-list').html('');
             }
 
             function insertRow(item, id) {

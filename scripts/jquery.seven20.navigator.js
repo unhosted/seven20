@@ -8,7 +8,7 @@
 			'tabContent': [],
 			'navigationFolders':[],
 			'folderOnClick': '',
-            'navEntryNames': ["folders", "public"],
+            'navEntryNames': ["folders", "public", "io"],
 			'folderTemplate' : '<li><a class="nav-header" onclick="##onClick##"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>',
             'navEntryTemplate': '<li class="nav-header" >##name##</li>',
             'navTabPaneTemplate': '<div class="tab-pane ##class##" id="##tab##"><p>##content##</p></div>',

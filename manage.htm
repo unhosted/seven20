@@ -105,6 +105,9 @@
 <script src="./scripts/bootstrap.helper.js"></script>
 <script src="./scripts/remoteStorage-debug.js"></script>
 <script src="./scripts/root.js"></script>
+<script src="./scripts/jzip.js"></script>
+<script src="./scripts/swfobject.js"></script>
+<script src="./scripts/downloadify.min.js"></script>
 
 <script>
     $().ready(function(){
@@ -117,8 +120,43 @@
 
         var tab0 = '<ul data-path="/" class="nav nav-list"></ul>';
         var tab1 = '<ul class="nav nav-list"><li><a class="nav-header" onclick="showGridData(\'/public/\');"><i class="icon-globe"></i>public/</a><ul data-path="/public/" class="nav nav-list"></ul></li></ul>';
-        var tab2 = '';
+        var tab2 = '<div class="btn-group">' +
+                '<div class="btn-group">' +
+                '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
+                '<ul class="dropdown-menu">' +
+                '<li><a onclick="getImportFile();">Zip</a></li>' +
+                '</ul>' +
+                '</div>' +
+                '<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Export to file<span class="caret"></span></button>' +
+                '<ul class="dropdown-menu">' +
+                '<li><a id="downloadify">Zip</a></li>' +
+                '</ul>' +
+                '</div>';
         $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
+        Downloadify.create('downloadify',{
+            data: function(){
+                return exportData().generate();
+            },
+            dataType: 'base64',
+            filename: function(){
+                return "remoteStorage-" + new Date().toISOString().slice(0, 10) + ".zip";
+            },
+            onComplete: function(){
+                alert('Your File Has Been Saved!');
+            },
+            onCancel: function(){
+                alert('You have cancelled the saving of this file.');
+            },
+            onError: function(){
+                alert('You must put something in the File Contents or there will be nothing to save!');
+            },
+            transparent: false,
+            swf: 'media/downloadify.swf',
+            downloadImage: 'img/download.png',
+            width: 100,
+            height: 30,
+            append: false
+        });
     });
 
     
@@ -133,6 +171,40 @@
                 var id = path + item;
                 $('#dataGrid').seven20Grid.insert(remoteStorage.root.getObject(id), id);
             });
+        }
+    }
+
+    function askExportData()
+    {
+
+    }
+
+    function exportData()
+    {
+        var zip = new JSZip();
+
+        addFilesToFolder(zip, '/');
+
+        return zip;
+        var content = zip.generate();
+        location.href="data:application/zip;base64,"+content;
+    }
+
+    function addFilesToFolder(folder, path)
+    {
+        var nextFolder;
+        var listing = remoteStorage.root.getListing(path);
+
+        for(var i=0; i<listing.length; i++) {
+            if(listing[i].charAt(listing[i].length - 1) == '/')
+            {
+                nextFolder = folder.folder(listing[i].replace(/\//g,""));
+                addFilesToFolder(nextFolder, path + listing[i]);
+            }
+            else
+            {
+                folder.file(listing[i] + ".json",JSON.stringify(remoteStorage.root.getObject(path + listing[i])));
+            }
         }
     }
 
