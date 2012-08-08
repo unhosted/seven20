@@ -106,10 +106,24 @@
 <script src="./scripts/remoteStorage-debug.js"></script>
 <script src="./scripts/root.js"></script>
 <script src="./scripts/jzip.js"></script>
+<script src="./scripts/jszip-load.js"></script>
 <script src="./scripts/swfobject.js"></script>
 <script src="./scripts/downloadify.min.js"></script>
 
 <script>
+    var modalHtml = '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal">×</button>' +
+            '<h3>##header##</h3>' +
+            '</div>' +
+            '<div class="modal-body">##body##</div>' +
+            '<div class="modal-footer">' +
+            '<a href="#" class="btn" data-dismiss="modal">Close</a>' +
+            '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
+            '</div>';
+    var zipImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
+    var jsonImportHtml = '';
+    var zipFileToImport;
+
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
 
@@ -124,14 +138,18 @@
                 '<div class="btn-group">' +
                 '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
                 '<ul class="dropdown-menu">' +
-                '<li><a onclick="getImportFile();">Zip</a></li>' +
+                '<li><a onclick="importFromZip();">Zip</a></li>' +
+                '<li><a onclick="importFromJSON();">JSon</a></li>' +
                 '</ul>' +
                 '</div>' +
                 '<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Export to file<span class="caret"></span></button>' +
                 '<ul class="dropdown-menu">' +
                 '<li><a id="downloadify">Zip</a></li>' +
                 '</ul>' +
+                '</div>' +
+                '<div class="modal hide" id="importModal">' +
                 '</div>';
+
         $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
         Downloadify.create('downloadify',{
             data: function(){
@@ -174,9 +192,73 @@
         }
     }
 
-    function askExportData()
+    function importFromZip()
     {
+        $('#importModal').html(modalHtml.replace("##header##","Import from zip file").replace("##body##", zipImportHtml));
+        $('#files').bind('change',handleFileSelect);
+        $('#importButton').bind('click',importZipFile);
+        $('#importModal').modal();
+    }
 
+    function importZipFile()
+    {
+        $.each(zipFileToImport.files, function(k, v) {
+            if(k.charAt(k.length - 1) != '/')
+            {
+                var path = "/" + k.split('.')[0];
+                var data = {};
+                if(v.data != "")
+                    data = JSON.parse(v.data);
+                var type = data['@type'];
+                remoteStorage.root.setObject(type, path, data);
+            }
+
+        });
+    }
+
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+            // Only process image files.
+            if (!f.type.match('application/x-zip-compressed')) {
+                continue;
+            }
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var zip = new JSZip();
+                    var data = e.target.result.split(',')[1];
+                    zip.load(data, {base64:true});
+                    parseZipFileToString(zip);
+                    zipFileToImport = zip;
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    }
+
+    function parseZipFileToString(zip)
+    {
+        $('#uploadObjects').html("<p>folders and files to be uploaded:</p>")
+        $.each(zip.files, function(k, v) {
+
+            $('#uploadObjects').append(k + "<br>");
+        });
+    }
+
+
+    function importFromJSON()
+    {
+        $('#importModal').html(modalHtml.replace("##header##","Import from json string").replace("##body##", jsonImportHtml));
+        $('#importModal').modal();
     }
 
     function exportData()
