@@ -2,7 +2,7 @@
     $.fn.seven20Navigator = function (options) {
         var defaultOptions =
         {
-            'navSelector': $('#nav'),
+            'navSelector': '#nav',
             'navEntrySelector': 'ul.nav-list li',
             'navHeaderSelector': '.nav-header',
 			'tabContent': [],
@@ -12,7 +12,7 @@
 			'folderTemplate' : '<li><a class="nav-header" onclick="##onClick##"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>',
             'navEntryTemplate': '<li class="nav-header" >##name##</li>',
             'navTabPaneTemplate': '<div class="tab-pane ##class##" id="##tab##"><p>##content##</p></div>',
-            'navTemplate': '<div class="slide-right-button"><i class="icon-chevron-left"></i></div><ul class="nav nav-tabs">##tabs##</ul><div class="tab-content">##tabs-content##</div>',
+            'navTemplate': '<div class="slide-right-button"><i class="icon-chevron-left"></i></div><ul class="nav nav-tabs"></ul><div class="tab-content"></div>',
             'navTabHeaderTemplate':'<li class="##class##"><a href="##tab##" data-toggle="tab">##name##</a></li>'
         };
         var o = $.extend(defaultOptions, options);
@@ -20,38 +20,52 @@
         return this.each(function () {
             var $t = $(this);
 
+            $.fn.seven20Navigator.refreshTabs = function() {
+                populateTabsHtml();
+            }
+
             function init() {
-
-                var navHtml = o.navTemplate;
-                var navHeaderHtml = "";
-                var navContentHtml = "";
-                for (var i in o.navEntryNames) {
-                    var css = '';
-                    if(i === "0")
-                        css = 'active';
-
-                    var navTabHtml = o.navTabHeaderTemplate;
-                    navTabHtml = navTabHtml.replace(/##name##/g, o.navEntryNames[i]).replace(/##class##/g, css).replace(/##tab##/g,'#tab' + i);
-                    navHeaderHtml += navTabHtml;
-                    navContentHtml += o.navTabPaneTemplate.replace(/##class##/g, css).replace(/##tab##/g,'tab' + i).replace(/##content##/g, o.tabContent[i]);
-                }
-                navHtml = navHtml.replace(/##tabs##/g, navHeaderHtml).replace(/##tabs-content##/g, navContentHtml);
-                $(o.navSelector).append(navHtml);
+                $(o.navSelector).append(o.navTemplate);
                 $(o.navSelector).addClass('tabbable well grid-height');
                 $t.find('.slide-right-button').bind('click', function () {
                     $(this).parent().slideLeft();
                 });
-				
-				$.each(o.navigationFolders, function (i, item) {
-					buildFolder('#tab' + i, item, '');
-				});
-				$("#tab0").delegate('a.nav-header', 'dblclick', function () {
-					$(this).next().slideToggle();
-				});
-                $("#tab1").delegate('a.nav-header', 'dblclick', function () {
+
+                populateTabsHtml(true);
+
+				setNavigationIcons();
+            }
+
+            function populateTabsHtml(andHeaders)
+            {
+                if(andHeaders)
+                    $(o.navSelector).find('ul.nav.nav-tabs').html('');
+                $(o.navSelector).find('div.tab-content').html('');
+
+                for (var i in o.navEntryNames) {
+                    var css = '';
+                    if(i === "0")
+                        css = 'active';
+                    var tabId = "#tab" + i;
+
+                    var navContentHtml = o.navTabPaneTemplate.replace(/##class##/g, css).replace(/##tab##/g,'tab' + i).replace(/##content##/g, o.tabContent[i]);
+                    $(o.navSelector).find('div.tab-content').append(navContentHtml);
+
+                    if(andHeaders)
+                    {
+                        var navHeaderHtml = o.navTabHeaderTemplate.replace(/##name##/g, o.navEntryNames[i]).replace(/##class##/g, css).replace(/##tab##/g,tabId);
+                        $(o.navSelector).find('ul.nav.nav-tabs').append(navHeaderHtml);
+                    }
+                }
+
+                $(o.navSelector).find(tabId).delegate('a.nav-header', 'dblclick', function () {
                     $(this).next().slideToggle();
                 });
-				setNavigationIcons();
+                $.each(o.navigationFolders, function (i, item) {
+                    buildFolder('#tab' + i, item, '');
+                });
+
+                $('[href="#tab0"]').click();
             }
 			
 			function buildFolder(target, path, fullPath)

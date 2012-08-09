@@ -134,23 +134,26 @@
 
         var tab0 = '<ul data-path="/" class="nav nav-list"></ul>';
         var tab1 = '<ul class="nav nav-list"><li><a class="nav-header" onclick="showGridData(\'/public/\');"><i class="icon-globe"></i>public/</a><ul data-path="/public/" class="nav nav-list"></ul></li></ul>';
-        var tab2 = '<div class="btn-group">' +
-                '<div class="btn-group">' +
+        var tab2 = '<p><div class="btn-group">' +
                 '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
                 '<ul class="dropdown-menu">' +
                 '<li><a onclick="importFromZip();">Zip</a></li>' +
                 '<li><a onclick="importFromJSON();">JSon</a></li>' +
                 '</ul>' +
                 '</div>' +
+                '<div class="btn-group">' +
                 '<button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">Export to file<span class="caret"></span></button>' +
                 '<ul class="dropdown-menu">' +
                 '<li><a id="downloadify">Zip</a></li>' +
                 '</ul>' +
                 '</div>' +
                 '<div class="modal hide" id="importModal">' +
-                '</div>';
+                '</div></p>' +
+                '<p><button class="btn btn-danger" onclick="deleteAllLocalStorage(); return false;">Clear all local storage</button></p>' +
+                '<p><button class="btn btn-info" onclick="refreshTabs(); return false;">Refresh Folders</button></p>';
 
         $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
+
         Downloadify.create('downloadify',{
             data: function(){
                 return exportData().generate();
@@ -177,6 +180,11 @@
         });
     });
 
+    function deleteAllLocalStorage()
+    {
+        localStorage.clear();
+        refreshTabs();
+    }
     
     function showGridData(path)
     {
@@ -214,7 +222,14 @@
             }
         });
 
+        //window.location = "manage.htm";
         $(this).prev().click();
+        refreshTabs();
+    }
+
+    function refreshTabs()
+    {
+        $('#dataGrid').seven20Navigator.refreshTabs();
     }
 
     function handleFileSelect(evt) {
