@@ -8,7 +8,7 @@
 			'tabContent': [],
 			'navigationFolders':[],
 			'folderOnClick': '',
-            'navEntryNames': ["folders", "public", "io"],
+            'navEntryNames': ["private", "public", "io"],
 			'folderTemplate' : '<li><a class="nav-header" onclick="##onClick##"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>',
             'navEntryTemplate': '<li class="nav-header" >##name##</li>',
             'navTabPaneTemplate': '<div class="tab-pane ##class##" id="##tab##"><p>##content##</p></div>',
@@ -98,26 +98,29 @@
 				for(var i=0; i<listing.length; i++) {
 					var css = "";
 					navList = '';
-					if(listing[i].charAt(listing[i].length - 1) == '/')
-					{
-						var onClick = '';
-						if(o.folderOnClick !== '')
-							onClick = o.folderOnClick + "(\'##fullpath##\');";
-						navList = $(o.folderTemplate.replace("##onClick##", onClick).replace(/##path##/g,path+listing[i]).replace(/##name##/g,listing[i]).replace(/##fullpath##/g, fullPath + listing[i]));
-						nav = nav.add(buildFolder(navList, listing[i], fullPath));
-					}
-					else
-					{
-						objectIds.push(listing[i]);
-						css = "has-data";
-					}
-				}
-				ret['element'] = nav;
-				ret['objectIds'] = objectIds;
-				ret['css'] = css;
+                    if(listing[i] != "public/")
+                    {
+                        if(listing[i].charAt(listing[i].length - 1) == '/')
+                        {
+                            var onClick = '';
+                            if(o.folderOnClick !== '')
+                                onClick = o.folderOnClick + "(\'##fullpath##\');";
+                            navList = $(o.folderTemplate.replace("##onClick##", onClick).replace(/##path##/g,path+listing[i]).replace(/##name##/g,listing[i]).replace(/##fullpath##/g, fullPath + listing[i]));
+                            nav = nav.add(buildFolder(navList, listing[i], fullPath));
+                        }
+                        else
+                        {
+                            objectIds.push(listing[i]);
+                            css = "has-data";
+                        }
+                    }
+                }
+                ret['element'] = nav;
+                ret['objectIds'] = objectIds;
+                ret['css'] = css;
 
-				return ret;
-			}
+                return ret;
+            }
 
 			function setNavigationIcons()
 			{

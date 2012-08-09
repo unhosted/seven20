@@ -12,10 +12,10 @@ remoteStorage.defineModule('public', function(client) {
     }
 });
 
-remoteStorage.defineModule('root', function(client) {
+remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseClient) {
     function addToPublicItems(path)
     {
-        var data = client.getObject("/public/publishedItems");
+        var data = myPublicBaseClient.getObject("publishedItems");
         if(path[0] == "/")
             path = path.substr(1);
 
@@ -31,12 +31,12 @@ remoteStorage.defineModule('root', function(client) {
             data = [];
             data.push(path);
         }
-        client.storeObject('array', "/public/publishedItems", data);
+        myPublicBaseClient.storeObject('array', "publishedItems", data);
     }
 
     function removeFromPublicItems(path)
     {
-        var data = client.getObject("/public/publishedItems");
+        var data = myPublicBaseClient.getObject("publishedItems");
         if(path[0] == "/")
             path = path.substr(1);
         if(data)
@@ -50,43 +50,81 @@ remoteStorage.defineModule('root', function(client) {
         {
             data = [];
         }
-        client.storeObject('array', "/public/publishedItems", data);
+        myPublicBaseClient.storeObject('array', "publishedItems", data);
     }
 
     function publishObject(path)
     {
-        if(path.substring(0, 8) == "/public/")
+        if(pathIsPublic(path))
             return 'Object has already been made public';
 
-        var data = client.getObject(path);
+        var data = myPrivateBaseClient.getObject(path);
         var publicPath = "/public" + path;
         addToPublicItems(path);
-        client.remove(path);
-        client.storeObject(data['@type'], publicPath, data);
+        myPrivateBaseClient.remove(path);
+        myPublicBaseClient.storeObject(data['@type'], path, data);
 
         return "Object " + path + " has been published to " + publicPath;
     }
 
     function archiveObject(path)
     {
-        if(path.substring(0, 8) != "/public/")
+        if(!pathIsPublic(path))
             return 'Object has already been made private';
 
-        var data = client.getObject(path);
+        var data = myPublicBaseClient.getObject(path);
         var privatePath = path.substring(7, path.length);
         removeFromPublicItems(path);
-        client.remove(path);
-        client.storeObject(data['@type'], privatePath, data);
+        myPublicBaseClient.remove(path);
+        myPrivateBaseClient.storeObject(data['@type'], path, data);
 
         return "Object " + path + " has been archived to " + privatePath;
     }
 
+    function pathIsPublic(path)
+    {
+        if(path.substring(0, 8) == "/public/")
+            return true;
+        return false;
+    }
+
+    function getClient(path)
+    {
+        if(!pathIsPublic(path))
+            return myPrivateBaseClient;
+        return myPublicBaseClient;
+    }
+
+    function getObject(path, cb, contex)
+    {
+       var client = getClient(path);
+        client.getObject(path, cb, contex);
+    }
+
+    function setObject(type, path, obj)
+    {
+        var client = getClient(path);
+        client.setObject(type, path, obj);
+    }
+
+    function removeObject(path)
+    {
+        var client = getClient(path);
+        client.remove(path);
+    }
+
+    function getListing(path, cb, context)
+    {
+        var client = getClient(path);
+        return client.getListing(path, cb, context);
+    }
+
     return {
         exports: {
-            getListing: client.getListing,
-            getObject: client.getObject,
-            setObject: client.storeObject,
-            removeObject: client.remove,
+            getListing: getListing,
+            getObject: getObject,
+            setObject: setObject,
+            removeObject: removeObject,
             archiveObject: archiveObject,
             publishObject: publishObject
         }
