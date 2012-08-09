@@ -153,31 +153,6 @@
                 '<p><button class="btn btn-info" onclick="refreshTabs(); return false;">Refresh Folders</button></p>';
 
         $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
-
-        Downloadify.create('downloadify',{
-            data: function(){
-                return exportData().generate();
-            },
-            dataType: 'base64',
-            filename: function(){
-                return "remoteStorage-" + new Date().toISOString().slice(0, 10) + ".zip";
-            },
-            onComplete: function(){
-                alert('Your File Has Been Saved!');
-            },
-            onCancel: function(){
-                alert('You have cancelled the saving of this file.');
-            },
-            onError: function(){
-                alert('You must put something in the File Contents or there will be nothing to save!');
-            },
-            transparent: false,
-            swf: 'media/downloadify.swf',
-            downloadImage: 'img/download.png',
-            width: 100,
-            height: 30,
-            append: false
-        });
     });
 
     function deleteAllLocalStorage()
@@ -230,6 +205,30 @@
     function refreshTabs()
     {
         $('#dataGrid').seven20Navigator.refreshTabs();
+        Downloadify.create('downloadify',{
+            data: function(){
+                return exportData().generate();
+            },
+            dataType: 'base64',
+            filename: function(){
+                return "remoteStorage-" + new Date().toISOString().slice(0, 10) + ".zip";
+            },
+            onComplete: function(){
+                alert('Your File Has Been Saved!');
+            },
+            onCancel: function(){
+                alert('You have cancelled the saving of this file.');
+            },
+            onError: function(){
+                alert('You must put something in the File Contents or there will be nothing to save!');
+            },
+            transparent: false,
+            swf: 'media/downloadify.swf',
+            downloadImage: 'img/download.png',
+            width: 100,
+            height: 30,
+            append: false
+        });
     }
 
     function handleFileSelect(evt) {
