@@ -212,8 +212,9 @@
                 var type = data['@type'];
                 remoteStorage.root.setObject(type, path, data);
             }
-
         });
+
+        $(this).prev().click();
     }
 
     function handleFileSelect(evt) {
@@ -223,7 +224,8 @@
         for (var i = 0, f; f = files[i]; i++) {
 
             // Only process image files.
-            if (!f.type.match('application/x-zip-compressed')) {
+            if (!(f.type.match('application/x-zip-compressed' ||
+                    f.type.match('application/zip')))) {
                 continue;
             }
 
