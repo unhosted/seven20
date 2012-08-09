@@ -1,5 +1,18 @@
 var seven20NavLinks = JSON.parse('[{"url":"index.html", "name":"Home"},{"url":"manage.htm", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
 
+var modalHtml = '<div class="modal-header">' +
+    '<button type="button" class="close" data-dismiss="modal">×</button>' +
+    '<h3>##header##</h3>' +
+    '</div>' +
+    '<div class="modal-body">##body##</div>' +
+    '<div class="modal-footer">' +
+    '<a href="#" class="btn" data-dismiss="modal">Close</a>' +
+    '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
+    '</div>';
+var zipImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
+var jsonImportHtml = '';
+var zipFileToImport;
+
 function getData(request, callback, data, host, port)
 {
     makeAjax(request, callback, "GET", data, host, port);
@@ -53,6 +66,162 @@ function showMessage(msg, title, type) {
             type: type,
             icon: false
         });
+    }
+}
+
+function deleteAllLocalStorage()
+{
+    localStorage.clear();
+    refreshTabs();
+}
+
+function showGridData(path)
+{
+    var target = '[data-path="' + path + '"]';
+    if($(target).prev('a').data() !== null)
+    {
+        $('#dataGrid').seven20Grid.clear();
+        $('#dataGrid').seven20Grid.setDataPath(path);
+        $($(target).prev('a').data().objectIds).each(function(i, item){
+            var id = path + item;
+            $('#dataGrid').seven20Grid.insert(remoteStorage.root.getObject(id), id);
+        });
+    }
+}
+
+function importFromZip()
+{
+    $('#importModal').html(modalHtml.replace("##header##","Import from zip file").replace("##body##", zipImportHtml));
+    $('#files').bind('change',handleFileSelect);
+    $('#importButton').bind('click',importZipFile);
+    $('#importModal').modal();
+}
+
+function importZipFile()
+{
+    $.each(zipFileToImport.files, function(k, v) {
+        if(k.charAt(k.length - 1) != '/')
+        {
+            var path = "/" + k.split('.')[0];
+            var data = {};
+            if(v.data != "")
+                data = JSON.parse(v.data);
+            var type = data['@type'];
+            remoteStorage.root.setObject(type, path, data);
+        }
+    });
+
+    //window.location = "manage.htm";
+    $(this).prev().click();
+    refreshTabs();
+}
+
+function refreshTabs()
+{
+    $('#dataGrid').seven20Navigator.refreshTabs();
+    loadDownloadifyButton();
+}
+
+function loadDownloadifyButton()
+{
+    Downloadify.create('downloadify',{
+        data: function(){
+            return exportData().generate();
+        },
+        dataType: 'base64',
+        filename: function(){
+            return "remoteStorage-" + new Date().toISOString().slice(0, 10) + ".zip";
+        },
+        onComplete: function(){
+            alert('Your File Has Been Saved!');
+        },
+        onCancel: function(){
+            alert('You have cancelled the saving of this file.');
+        },
+        onError: function(){
+            alert('You must put something in the File Contents or there will be nothing to save!');
+        },
+        transparent: false,
+        swf: 'media/downloadify.swf',
+        downloadImage: 'img/download.png',
+        width: 100,
+        height: 30,
+        append: false
+    });
+}
+
+function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+        // Only process image files.
+        if (!(f.type.match('application/x-zip-compressed') ||
+            f.type.match('application/zip'))) {
+            continue;
+        }
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function(theFile) {
+            return function(e) {
+                var zip = new JSZip();
+                var data = e.target.result.split(',')[1];
+                zip.load(data, {base64:true});
+                parseZipFileToString(zip);
+                zipFileToImport = zip;
+            };
+        })(f);
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f);
+    }
+}
+
+function parseZipFileToString(zip)
+{
+    $('#uploadObjects').html("<p>folders and files to be uploaded:</p>")
+    $.each(zip.files, function(k, v) {
+
+        $('#uploadObjects').append(k + "<br>");
+    });
+}
+
+
+function importFromJSON()
+{
+    $('#importModal').html(modalHtml.replace("##header##","Import from json string").replace("##body##", jsonImportHtml));
+    $('#importModal').modal();
+}
+
+function exportData()
+{
+    var zip = new JSZip();
+
+    addFilesToFolder(zip, '/');
+
+    return zip;
+    var content = zip.generate();
+    location.href="data:application/zip;base64,"+content;
+}
+
+function addFilesToFolder(folder, path)
+{
+    var nextFolder;
+    var listing = remoteStorage.root.getListing(path);
+
+    for(var i=0; i<listing.length; i++) {
+        if(listing[i].charAt(listing[i].length - 1) == '/')
+        {
+            nextFolder = folder.folder(listing[i].replace(/\//g,""));
+            addFilesToFolder(nextFolder, path + listing[i]);
+        }
+        else
+        {
+            folder.file(listing[i] + ".json",JSON.stringify(remoteStorage.root.getObject(path + listing[i])));
+        }
     }
 }
 

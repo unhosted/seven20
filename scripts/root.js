@@ -21,7 +21,7 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
 
         if(data)
         {
-            if($.inArray(path, data) != true)
+            if(data.indexOf(path) == -1)
             {
                 data.unshift(path);
             }

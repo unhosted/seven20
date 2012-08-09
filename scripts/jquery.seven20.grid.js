@@ -148,7 +148,7 @@
                     var itemID = getRowID(item);
                     var message = remoteStorage.root.archiveObject(itemID);
 
-                    showMessage('Deleted record at _id=' + itemID, 'Delete Successful');
+                    showMessage('Archived record at _id=' + itemID, 'Archive Successful');
                 });
             }
 

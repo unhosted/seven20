@@ -50,6 +50,9 @@
 
                     var navContentHtml = o.navTabPaneTemplate.replace(/##class##/g, css).replace(/##tab##/g,'tab' + i).replace(/##content##/g, o.tabContent[i]);
                     $(o.navSelector).find('div.tab-content').append(navContentHtml);
+                    $(o.navSelector).find(tabId).delegate('a.nav-header', 'dblclick', function () {
+                        $(this).next().slideToggle();
+                    });
 
                     if(andHeaders)
                     {
@@ -58,9 +61,6 @@
                     }
                 }
 
-                $(o.navSelector).find(tabId).delegate('a.nav-header', 'dblclick', function () {
-                    $(this).next().slideToggle();
-                });
                 $.each(o.navigationFolders, function (i, item) {
                     buildFolder('#tab' + i, item, '');
                 });
