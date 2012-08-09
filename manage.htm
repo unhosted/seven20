@@ -153,6 +153,7 @@
                 '<p><button class="btn btn-info" onclick="refreshTabs(); return false;">Refresh Folders</button></p>';
 
         $('#dataGrid').seven20Navigator({navSelector:'#sidebar', tabContent:[tab0,tab1,tab2], navigationFolders:['/','/public/'], folderOnClick:'showGridData'});
+        loadDownloadifyButton();
     });
 
     function deleteAllLocalStorage()
@@ -205,6 +206,11 @@
     function refreshTabs()
     {
         $('#dataGrid').seven20Navigator.refreshTabs();
+        loadDownloadifyButton();
+    }
+
+    function loadDownloadifyButton()
+    {
         Downloadify.create('downloadify',{
             data: function(){
                 return exportData().generate();
