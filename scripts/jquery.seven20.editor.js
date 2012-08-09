@@ -45,17 +45,19 @@ function fadeAndRemove(target){
         return this.each(function () {
             var elem = $(this);
 			
-            function init() {		
+            function init() {
+                var newContent = false;
 				// If the editor should create new content
 				if(o.contentId === '')
 				{
-					// Attempt to create a contentId that denotes a new document
+                    newContent = true;
+                    // Attempt to create a contentId that denotes a new document
 					for(i = 0; i < 10; i++)
 					{
 						// If there is not another editor with the same ID
 						if($('#editor-newcontent' + i).length === 0)
 						{
-							o.contentId = "newcontent" + i;
+							o.contentId = o.contentName + "newcontent" + i;
 							break;
 						}
 						// Else if there are 10 other editors creating new content
@@ -65,13 +67,13 @@ function fadeAndRemove(target){
 					}
 				}
 				
-                buildForm();
+                buildForm(newContent);
             }
 			
-			function buildForm() {
+			function buildForm(newContent) {
 				var myForm = o.formHtml;
                 var formId = o.contentId.replace(/\//g, "-");
-				if(o.contentId.indexOf("newcontent") != -1)
+				if(newContent)
 				{
 					myForm = myForm.replace(/##heading##/g, "Create new " + o.contentName + " document");
 				}

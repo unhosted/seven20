@@ -266,7 +266,6 @@
 
                 // Complete the selected item
                 $t.find('.archive-button').bind('click', function () {
-                    //TODO: wireup archiving
                     var selectedItems = getSelectedItems();
                     archiveItems(selectedItems);
                     clearCheckedItems(' items archived', true);

@@ -98,13 +98,13 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
     function getObject(path, cb, contex)
     {
        var client = getClient(path);
-        client.getObject(path, cb, contex);
+        return client.getObject(path, cb, contex);
     }
 
     function setObject(type, path, obj)
     {
         var client = getClient(path);
-        client.setObject(type, path, obj);
+        client.storeObject(type, path, obj);
     }
 
     function removeObject(path)
