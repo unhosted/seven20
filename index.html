@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Seven20</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="seven20 - a data management interface for remoteStorage">
     <meta name="author" content="epic720">
@@ -11,7 +11,61 @@
     <link href="./css/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
     <link href="./css/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
     <link href="./css/jquery.seven20.css" rel="stylesheet" type="text/css" />
+    <link href="./css/joyride-1.0.3.css" rel="stylesheet" type="text/css" />
     <link href="./css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        #sidebar {
+            min-width: 20em;
+        }
+        #remotestorage-state {
+            top: -2px !important;
+        }
+        .ui-pnotify-history-container {
+            right: 305px;
+        }
+        .form-horizontal .controls {
+            margin-left: 105px;
+        }
+        .form-horizontal .control-label {
+            width: 100px;
+        }
+        .nav-list > li > a {
+            cursor: pointer;
+        }
+        .tabbable {
+            position: relative;
+        }
+        .tab-content
+        {
+            height: 25em;
+            overflow: auto;
+        }
+        .icon-blank {
+            background-image: none;
+            background-position: 0;
+        }
+
+        .btn.btn-primary.right-padding {
+            margin-right: 2em;
+            margin-left: 2em;
+        }
+        .form-horizontal .form-actions {
+            padding-left: 0 !important;
+        }
+        .io-btn{
+            width:150px;
+        }
+            /*.form-actions input[class*="span"], select[class*="span"], textarea[class*="span"],*/
+            /*.uneditable-input[class*="span"], .row-fluid input[class*="span"], .row-fluid select[class*="span"],*/
+            /*.row-fluid textarea[class*="span"], .row-fluid .uneditable-input[class*="span"] {*/
+            /*float: left;*/
+            /*}*/
+    </style>
+
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -24,28 +78,129 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
+
 <body>
 
 <div id="topnav">
 </div>
 
-<div class="container">
-    <div class="hero-unit">
-        <h1>Seven20 - An Unhosted Data Management Interface</h1>
-        <p>Managing your content should be easy, but the amount in which you can control your content should be endless. Take control of your data and decide who gets to access it, how they get to access it, and for how long they get to access it. Your data is yours, and now it is all under your own control -- all in one place! </p>
-        <p><a class="btn btn-primary btn-large" href="manage.htm">See your data »</a></p>
-    </div>
-</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div id="dataGrid">
+            <div id="gridUI" class="grid-height row-fluid">
+                <div id="sidebar" class="span1"></div>
+            </div>
+        </div>
+    </div><!--/row-->
 
+    <ol id="joyRideTipContent" class="hidden" style="display: none; ">
+        <li data-id="sidebar" data-text="datatext" class="custom">
+            <h2>Folders</h2>
+            <p>You can see all of the folders here</p>
+        </li>
+        <li data-id="grid" data-text="Next" data-options="tipLocation:top;tipAnimation:fade">
+            <h2>Grid</h2>
+            <p>A list of objects within the folder that you can interact with</p>
+        </li>
+        <li data-id="viewer" data-text="Close">
+            <h2>Viewer</h2>
+            <p>This is where you view, create, and edit objects</p>
+        </li>
+        <li data-id="viewer" data-text="Close">
+            <h2>Viewer</h2>
+            <p>This is where you view, create, and edit objects</p>
+        </li>
+        <li data-id="tab2" data-text="Close">
+            <h2>io</h2>
+            <p>import, export, wipe, and refresh all</p>
+        </li>
+    </ol>
+    <div class="joyride-tip-guide custom" id="joyRidePopup0" style="display: block; top: 241px; left: 481.5px; "><span class="joyride-nub top" style=""></span>
+        <h2>Folders</h2>
+        <p>Folders that are highlighted contain objects, <h5>click on one of the folders to view it's objects in the grid.</h5></p>
+        <a href="#" class="joyride-next-tip small nice radius yellow button">Interact with objects in the grid</a><a href="#close" class="joyride-close-tip">X</a></div>
+    <div class="joyride-tip-guide" id="joyRidePopup1" style="display: none;"><span class="joyride-nub"></span>
+        <h2>Grid</h2>
+        <p>This is where you will interact with objects in your remoteStorage. Try out some of the features!</p>
+        <p>
+            <h5>
+            <a class="btn"><i class="icon-plus"></i></a>Create object<br>
+            Selected objects in the grid<br>
+            <a class="btn"><i class="icon-share"></i></a>Share object(s)<br>
+            <a class="btn"><i class="icon-edit"></i></a>Edit object(s)<br>
+            <a class="btn"><i class="icon-globe"></i></a>Publish object(s)<br>
+            <a class="btn"><i class="icon-inbox"></i></a>Archive object(s)<br>
+            <a class="btn"><i class="icon-trash"></i></a>Delete object(s)<br></h5>
+        </p>
+        <a href="#" class="joyride-next-tip small nice radius yellow button">Check out the data viewer</a><a href="#close" class="joyride-close-tip">X</a>
+    </div>
+    <div class="joyride-tip-guide" id="joyRidePopup2" style="display: none;"><span class="joyride-nub"></span>
+        <h2>Viewer</h2>
+        <p>This is where grid data is viewed, created, and edited.</p>
+        <p><h5>Click <a class="btn"><i class="icon-edit"></i></a> to edit the selected items</h5></p>
+        <a href="#" class="joyride-next-tip small nice radius yellow button">Editing objects in the viewer</a><a href="#close" class="joyride-close-tip">X</a>
+    </div>
+    <div class="joyride-tip-guide" id="joyRidePopup3" style="display: none;"><span class="joyride-nub"></span>
+        <h2>Editing</h2>
+        <p>The editor/creator allows you to edit the raw value of all fields in the object</p>
+        <p>
+            <a class="btn btn-primary"><i class="icon-plus"></i></a>Adds a new field to the object<br>
+            <a class="btn btn-success"><i class="icon-ok"></i></a>Saves the object at the path in the ID textbox<br>
+            <a class="btn btn-danger"><i class="icon-remove"></i></a>Ignores changes and closes editor<br>
+        </p>
+        <a href="#" class="joyride-next-tip small nice radius yellow button">Check out the io tab in the navigator</a><a href="#close" class="joyride-close-tip">X</a>
+    </div>
+    <div class="joyride-tip-guide" id="joyRidePopup4" style="display: none;"><span class="joyride-nub"></span>
+        <h2>IO</h2>
+        <p>This tab allows you to do several global actions on your data like import, export, wipe, and refresh all</p>
+        <p>
+            Try import and exporting data! You bring data in from other sources and you can export your data to an archive where you can store safely on disk!
+        </p>
+        <a href="#" class="joyride-next-tip small nice radius yellow button">Please send all feedback to epic720@gmail.com</a><a href="#close" class="joyride-close-tip">X</a>
+    </div>
+    <footer>
+        <p>&copy; Seven20 2012</p>
+    </footer>
+
+</div><!--/.fluid-container-->
 <script src="http://code.jquery.com/jquery.min.js"></script>
 <script src="./scripts/bootstrap.js"></script>
+<script src="./scripts/jquery.validate.min.js"></script>
+<script src="./scripts/jquery.pnotify.min.js"></script>
 <script src="./scripts/jquery.seven20.js"></script>
+<script src="./scripts/jquery.seven20.editor.js"></script>
+<script src="./scripts/jquery.seven20.navigator.js"></script>
+<script src="./scripts/jquery.seven20.grid.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
 <script src="http://remotestoragejs.com/build/0.7.0-dp1/remoteStorage-debug.js"></script>
-<script>
+<script src="./scripts/root.js"></script>
+<script src="./scripts/jzip.js"></script>
+<script src="./scripts/jszip-load.js"></script>
+<script src="./scripts/swfobject.js"></script>
+<script src="./scripts/downloadify.min.js"></script>
+<script src="./scripts/jquery.joyride-1.0.3.js"></script>
+<script type="text/javascript">
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
+
+        remoteStorage.loadModule('root', 'rw');
+        remoteStorage.displayWidget('widget');
+        remoteStorage.root.setOnChange(remoteStorageOnChange);
+
+        $('#dataGrid').seven20Grid({});
+
+        $('#dataGrid').seven20Navigator({});
+        loadDownloadifyButton();
+
+        $(this).joyride();
     });
+
+    function remoteStorageOnChange(id, obj)
+    {
+        refreshTabs();
+    }
 </script>
 </body>
 </html>
+
+
