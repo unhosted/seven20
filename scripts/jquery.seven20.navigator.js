@@ -2,12 +2,33 @@
     $.fn.seven20Navigator = function (options) {
         var defaultOptions =
         {
-            'navSelector': '#nav',
+            'navSelector': '#sidebar',
             'navEntrySelector': 'ul.nav-list li',
             'navHeaderSelector': '.nav-header',
-			'tabContent': [],
-			'navigationFolders':[],
-			'folderOnClick': '',
+			'tabContent': [ //Tab1
+			                '<ul data-path="/" class="nav nav-list"></ul>',
+                            //Tab2
+                            '<ul class="nav nav-list"><li><a class="nav-header" onclick="showGridData(\'/public/\');"><i class="icon-globe"></i>public/</a><ul data-path="/public/" class="nav nav-list"></ul></li></ul>',
+                            //Tab3
+                            '<div class="btn-group">' +
+                            '<button class="btn btn-primary io-btn dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
+                            '<ul class="dropdown-menu">' +
+                            '<li><a onclick="importFromZip();">Zip</a></li>' +
+                            '<li><a onclick="importFromJSON();">JSon</a></li>' +
+                            '</ul>' +
+                            '</div><div></div>' +
+                            '<div class="btn-group">' +
+                            '<button class="btn btn-inverse io-btn dropdown-toggle" data-toggle="dropdown">Export to file<span class="caret"></span></button>' +
+                            '<ul class="dropdown-menu">' +
+                            '<li><a id="downloadify">Zip</a></li>' +
+                            '</ul>' +
+                            '</div>' +
+                            '<div class="modal hide" id="importModal">' +
+                            '</div>' +
+                            '<p><p><button class="btn btn-danger io-btn" onclick="deleteAllLocalStorage(); return false;">Clear all local storage</button></p>' +
+                            '<p><button class="btn btn-info io-btn" onclick="refreshTabs(); return false;">Refresh Folders</button></p></p>'],
+			'navigationFolders':['/','/public/'],
+			'folderOnClick': 'showGridData',
             'navEntryNames': ["private", "public", "io"],
 			'folderTemplate' : '<li><a class="nav-header" onclick="##onClick##"><i class="icon-blank"></i>##name##</a><ul data-path="##fullpath##" class="nav nav-list"></ul></li>',
             'navEntryTemplate': '<li class="nav-header" >##name##</li>',

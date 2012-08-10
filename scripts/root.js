@@ -13,6 +13,11 @@ remoteStorage.defineModule('public', function(client) {
 });
 
 remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseClient) {
+    function setOnChange(cb)
+    {
+        myPrivateBaseClient.on('change', function(e) { console.log(e); cb(e); });
+    }
+
     function addToPublicItems(path)
     {
         var data = myPublicBaseClient.getObject("publishedItems");
@@ -126,7 +131,8 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
             setObject: setObject,
             removeObject: removeObject,
             archiveObject: archiveObject,
-            publishObject: publishObject
+            publishObject: publishObject,
+            setOnChange:setOnChange
         }
     }
 });

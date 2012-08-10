@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dashboard</title>
+    <title>Seven20</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="seven20 - public dashboard">
+    <meta name="description" content="seven20 - a data management interface for remoteStorage">
     <meta name="author" content="epic720">
 
 
@@ -23,18 +23,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-
-    <style>
-        #remotestorage-state {
-            top: -2px !important;
-        }
-        .ui-pnotify-history-container {
-            right: 305px;
-        }
-        #public {
-            margin-top: 50px;
-        }
-    </style>
 </head>
 <body>
 
@@ -42,8 +30,10 @@
 </div>
 
 <div class="container">
-    <div class="row-fluid">
-        <div id="public" class="span4"><h1>Public Data</h1></div>
+    <div class="hero-unit">
+        <h1>Seven20 - An Unhosted Data Management Interface</h1>
+        <p>Managing your content should be easy, but the amount in which you can control your content should be endless. Take control of your data and decide who gets to access it, how they get to access it, and for how long they get to access it. Your data is yours, and now it is all under your own control -- all in one place! </p>
+        <p><a class="btn btn-primary btn-large" href="index.html">See your data »</a></p>
     </div>
 </div>
 
@@ -52,22 +42,9 @@
 <script src="./scripts/jquery.seven20.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
 <script src="http://remotestoragejs.com/build/0.7.0-dp1/remoteStorage-debug.js"></script>
-<script src="./scripts/root.js"></script>
 <script>
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
-
-        remoteStorage.displayWidget('widget');
-        remoteStorage.loadModule('public', 'r');
-
-        var publicItems = remoteStorage.public.getPublicItems();
-        for(var i in publicItems){
-            if(i != "@type") {
-                var data = remoteStorage.public.getObject(publicItems[i]);
-                $('#public').append('<div><h3>' + publicItems[i] + '</h3><span>' + JSON.stringify(data) + '</span></div>');
-            }
-        }
-
     });
 </script>
 </body>
