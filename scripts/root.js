@@ -15,7 +15,14 @@ remoteStorage.defineModule('public', function(client) {
 remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseClient) {
     function setOnChange(cb)
     {
-        myPrivateBaseClient.on('change', function(e) { console.log(e); cb(e); });
+        myPrivateBaseClient.on('change', function(e)
+        {
+            console.log(e); cb(e);
+        });
+        myPublicBaseClient.on('change', function(e)
+        {
+            console.log(e); cb(e);
+        });
     }
 
     function addToPublicItems(path)
@@ -65,9 +72,9 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
 
         var data = myPrivateBaseClient.getObject(path);
         var publicPath = "/public" + path;
-        addToPublicItems(path);
+        addToPublicItems(publicPath);
         myPrivateBaseClient.remove(path);
-        myPublicBaseClient.storeObject(data['@type'], path, data);
+        myPrivateBaseClient.storeObject(data['@type'], publicPath, data);
 
         return "Object " + path + " has been published to " + publicPath;
     }
@@ -77,11 +84,11 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
         if(!pathIsPublic(path))
             return 'Object has already been made private';
 
-        var data = myPublicBaseClient.getObject(path);
+        var data = myPrivateBaseClient.getObject(path);
         var privatePath = path.substring(7, path.length);
         removeFromPublicItems(path);
-        myPublicBaseClient.remove(path);
-        myPrivateBaseClient.storeObject(data['@type'], path, data);
+        myPrivateBaseClient.remove(path);
+        myPrivateBaseClient.storeObject(data['@type'], privatePath, data);
 
         return "Object " + path + " has been archived to " + privatePath;
     }

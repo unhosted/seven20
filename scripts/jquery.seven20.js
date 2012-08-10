@@ -1,4 +1,4 @@
-var seven20NavLinks = JSON.parse('[{"url":"about.html", "name":"Home"},{"url":"index.html", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
+var seven20NavLinks = JSON.parse('[{"url":"index.html", "name":"Home"},{"url":"manage.htm", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
 
 var modalHtml = '<div class="modal-header">' +
     '<button type="button" class="close" data-dismiss="modal">×</button>' +
@@ -111,7 +111,7 @@ function importZipFile()
         }
     });
 
-    //window.location = "index.html";
+    //window.location = "manage.htm";
     $(this).prev().click();
     refreshTabs();
 }
