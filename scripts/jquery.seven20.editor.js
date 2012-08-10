@@ -124,6 +124,12 @@ function fadeAndRemove(target){
                 var id = data.id;
                 delete data.id;
 
+                if(id.indexOf("/") == -1)
+                {
+                    alert('cannot place item in root directory.');
+                    return false;
+                }
+
                 remoteStorage.root.setObject(type, id, data);
                 showMessage('Document saved as ' + id, 'Document save successful');
                 $(o.targetForm).parent().fadeAndRemove();
