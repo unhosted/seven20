@@ -10,8 +10,8 @@ var modalHtml = '<div class="modal-header">' +
     '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
     '</div>';
 var zipImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
-var jsonImportHtml = '';
-var zipFileToImport;
+var jsonImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
+var fileToImport;
 
 function getData(request, callback, data, host, port)
 {
@@ -37,7 +37,7 @@ function makeAjax(request, callback, type, data, host, port)
     if (host === '' || host === undefined)
     {
         if( window.location.host === '')
-                host = "http://localhost";
+            host = "http://localhost";
         else
             host = 'http://' + window.location.host;
     }
@@ -89,17 +89,71 @@ function showGridData(path)
     }
 }
 
+function getUniqueId(object, lastResort)
+{
+    var idNames = ["@id", "id", "_id"];
+
+    for(var i in idNames)
+    {
+        if(object[idNames[i]] != undefined)
+        {
+            return object[idNames[i]];
+        }
+    }
+
+    return lastResort;
+}
+
+function importJsonObject(type, path, object) {
+
+    for (var i in object) {
+        var childName = i;
+        var child = object[i];
+
+        if (child instanceof Object)
+        {
+            var newPath = path + "/" + childName
+            if(child instanceof Array)
+            {
+                for (var j in child) {
+                    var id = getUniqueId(child[j], j);
+                    importJsonObject('file', newPath + "/" + id, child[j]);
+                }
+                object[i] = "path:" + newPath + "/";
+            }
+            else
+            {
+                importJsonObject("file", newPath + "/" + i, child);
+                object[i] = "path:" + newPath;
+            }
+        }
+    }
+    remoteStorage.root.setObject(type, path, object);
+}
+
+function importJsonFile()
+{
+    var s = fileToImport.replace(/(\r\n|\n|\r)/gm,"");
+    var rootFolder = JSON.parse(s);
+
+    // TODO: parse objects and show in results
+    //importJsonObject('file', '/fb', rootFolder);
+
+    $(this).prev().click();
+    refreshTabs();
+}
+
 function importFromZip()
 {
     $('#importModal').html(modalHtml.replace("##header##","Import from zip file").replace("##body##", zipImportHtml));
-    $('#files').bind('change',handleFileSelect);
+    $('#files').bind('change',handleZipFileSelect);
     $('#importButton').bind('click',importZipFile);
     $('#importModal').modal();
 }
 
 function importZipFile()
 {
-    $.each(zipFileToImport.files, function(k, v) {
+    $.each(fileToImport.files, function(k, v) {
         if(k.charAt(k.length - 1) != '/')
         {
             var path = "/" + k.split('.')[0];
@@ -111,8 +165,7 @@ function importZipFile()
         }
     });
 
-    //window.location = "index.html";
-    $(this).prev().click();
+    $('#importModal').modal('hide');
     refreshTabs();
 }
 
@@ -150,7 +203,36 @@ function loadDownloadifyButton()
     });
 }
 
-function handleFileSelect(evt) {
+function handleJsonFileSelect(evt, types, cb)
+{
+    var types = ['text/plain','application/json'];
+
+    var files = evt.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (var i = 0, f; f = files[i]; i++) {
+
+        // Only process image files.
+        if (!types.indexOf(f.type.match) == -1)
+        {
+            continue;
+        }
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function(theFile) {
+            return function(e) {
+                var data = e.target.result;
+            };
+        })(f);
+
+        //Read in the image file as a data URL.
+        reader.readAsText(f);
+    }
+}
+
+function handleZipFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
     // Loop through the FileList and render image files as thumbnails.
@@ -167,11 +249,12 @@ function handleFileSelect(evt) {
         // Closure to capture the file information.
         reader.onload = (function(theFile) {
             return function(e) {
+
                 var zip = new JSZip();
                 var data = e.target.result.split(',')[1];
                 zip.load(data, {base64:true});
-                parseZipFileToString(zip);
-                zipFileToImport = zip;
+                fileToImport = zip;
+                parseZipFileToString(zip)
             };
         })(f);
 
@@ -193,6 +276,8 @@ function parseZipFileToString(zip)
 function importFromJSON()
 {
     $('#importModal').html(modalHtml.replace("##header##","Import from json string").replace("##body##", jsonImportHtml));
+    $('#files').bind('change',handleJsonFileSelect);
+    $('#importButton').bind('click',importJsonFile);
     $('#importModal').modal();
 }
 

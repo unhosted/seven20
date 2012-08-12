@@ -13,14 +13,14 @@
                             '<div class="btn-group">' +
                             '<button class="btn btn-primary io-btn dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
                             '<ul class="dropdown-menu">' +
-                            '<li><a onclick="importFromZip();">Zip</a></li>' +
-                            '<li><a onclick="importFromJSON();">JSon</a></li>' +
+                            '<li><a onclick="importFromZip();">zip</a></li>' +
+                            '<li><a onclick="importFromJSON();">json</a></li>' +
                             '</ul>' +
                             '</div><div></div>' +
                             '<div class="btn-group">' +
                             '<button class="btn btn-inverse io-btn dropdown-toggle" data-toggle="dropdown">Export to file<span class="caret"></span></button>' +
                             '<ul class="dropdown-menu">' +
-                            '<li><a id="downloadify">Zip</a></li>' +
+                            '<li><a id="downloadify">zip</a></li>' +
                             '</ul>' +
                             '</div>' +
                             '<div class="modal hide" id="importModal">' +
@@ -86,7 +86,7 @@
                     buildFolder('#tab' + i, item, '');
                 });
 
-                $('[href="#tab0"]').click();
+                $('a[href="#tab0"]').click();
             }
 			
 			function buildFolder(target, path, fullPath)
