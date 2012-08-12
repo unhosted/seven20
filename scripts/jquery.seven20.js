@@ -201,7 +201,7 @@ function loadDownloadifyButton()
 {
     Downloadify.create('downloadify',{
         data: function(){
-            return exportData().generate();
+            return exportDataToZip().generate();
         },
         dataType: 'base64',
         filename: function(){
@@ -306,7 +306,7 @@ function importFromJSON()
     $('#importModal').modal();
 }
 
-function exportData()
+function exportDataToZip()
 {
     var zip = new JSZip();
 
@@ -330,7 +330,7 @@ function addFilesToFolder(folder, path)
         }
         else
         {
-            folder.file(listing[i] + ".json",JSON.stringify(remoteStorage.root.getObject(path + listing[i])));
+            folder.file(listing[i],JSON.stringify(remoteStorage.root.getObject(path + listing[i])));
         }
     }
 }
