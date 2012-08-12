@@ -9,8 +9,8 @@ var modalHtml = '<div class="modal-header">' +
     '<a href="#" class="btn" data-dismiss="modal">Close</a>' +
     '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
     '</div>';
-var zipImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
-var jsonImportHtml = '<input type="file" id="files" name="files[]"><div id="uploadObjects"></div>';
+var zipImportHtml = '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>';
+var jsonImportHtml = '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>';
 var fileToImport;
 
 function getData(request, callback, data, host, port)
@@ -133,30 +133,52 @@ function importJsonObject(type, path, object) {
 
 function importJsonFile()
 {
-    var s = fileToImport.replace(/(\r\n|\n|\r)/gm,"");
-    var rootFolder = JSON.parse(s);
-
-    // TODO: parse objects and show in results
-    //importJsonObject('file', '/fb', rootFolder);
+    importJsonObject('file', getBaseFolder(), fileToImport);
 
     $(this).prev().click();
     refreshTabs();
+}
+
+function displayJsonImport(data)
+{
+    $.each(data, function(k, v) {
+        $('#uploadObjects').append(k + "<br>");
+    });
 }
 
 function importFromZip()
 {
     $('#importModal').html(modalHtml.replace("##header##","Import from zip file").replace("##body##", zipImportHtml));
     $('#files').bind('change',handleZipFileSelect);
-    $('#importButton').bind('click',importZipFile);
+    $('#importButton').attr('disabled', 'disabled');
     $('#importModal').modal();
+}
+
+function getBaseFolder()
+{
+    var baseFolder = $('#baseFolder').val();
+
+    if(baseFolder.length != 0)
+    {
+        if(baseFolder[0] != "/")
+            baseFolder = "/" + baseFolder;
+        if(baseFolder[baseFolder.length - 1] == "/")
+            baseFolder = baseFolder.substr(0, baseFolder.length - 2)
+    }
+    else
+        baseFolder = "/";
+
+    return baseFolder;
 }
 
 function importZipFile()
 {
+    var baseFolder = getBaseFolder();
+
     $.each(fileToImport.files, function(k, v) {
         if(k.charAt(k.length - 1) != '/')
         {
-            var path = "/" + k.split('.')[0];
+            var path = baseFolder + k.split('.')[0];
             var data = {};
             if(v.data != "")
                 data = JSON.parse(v.data);
@@ -223,7 +245,10 @@ function handleJsonFileSelect(evt, types, cb)
         // Closure to capture the file information.
         reader.onload = (function(theFile) {
             return function(e) {
-                var data = e.target.result;
+                var s = e.target.result.replace(/(\r\n|\n|\r)/gm,"");
+                fileToImport = JSON.parse(s);
+                displayJsonImport(fileToImport);
+                $('#importButton').bind('click',importJsonFile).removeAttr('disabled');
             };
         })(f);
 
@@ -255,6 +280,7 @@ function handleZipFileSelect(evt) {
                 zip.load(data, {base64:true});
                 fileToImport = zip;
                 parseZipFileToString(zip)
+                $("#importButton").bind('click',importZipFile).removeAttr('disabled');
             };
         })(f);
 
@@ -272,12 +298,11 @@ function parseZipFileToString(zip)
     });
 }
 
-
 function importFromJSON()
 {
     $('#importModal').html(modalHtml.replace("##header##","Import from json string").replace("##body##", jsonImportHtml));
     $('#files').bind('change',handleJsonFileSelect);
-    $('#importButton').bind('click',importJsonFile);
+    $('#importButton').attr('disabled', 'disabled');
     $('#importModal').modal();
 }
 
