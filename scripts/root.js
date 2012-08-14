@@ -53,7 +53,7 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
             path = path.substr(1);
         if(data)
         {
-            if($.inArray(path, data) != true)
+            if(data.indexOf(path) != -1)
             {
                 data.pop(path);
             }
