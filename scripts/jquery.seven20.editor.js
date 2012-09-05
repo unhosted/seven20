@@ -135,36 +135,6 @@ function fadeAndRemove(target){
                 $(o.targetForm).parent().fadeAndRemove();
             }
 
-//            function insertFormValues(data) {
-//                if (data.error) {
-//                }
-//                else {
-//
-//                    $.each(data, function (i, item) {
-//                        for (var key in item) {
-//                            $(o.targetForm).find('#' + key).val(item[key]);
-//                        }
-//                    });
-//                }
-//            }
-
-//            function getValidationClassFromSqlColumn(nullable) {
-//                var cssText = "";
-//
-//                if (nullable == "NO") {
-//                    cssText += "required ";
-//                }
-//
-//                return cssText;
-//            }
-//
-//            function getValidationHtmlFromSqlColumn(maxLength) {
-//                if (maxLength > 0) {
-//                }
-//
-//                return "";
-//            }
-
             function buildFormEntry(entryName, entryValue, entryClass, entryType, validationEntries) {
                 if (entryName == "_id") {
                     entryClass = entryClass.replace("required", "");

@@ -107,6 +107,7 @@
 <script src="./scripts/jquery.seven20.js"></script>
 <script src="./scripts/jquery.seven20.editor.js"></script>
 <script src="./scripts/jquery.seven20.navigator.js"></script>
+<script src="./scripts/jquery.seven20.porter.js"></script>
 <script src="./scripts/jquery.seven20.grid.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
 <script src="http://remotestoragejs.com/build/0.7.0-dp1/remoteStorage-debug.js"></script>
@@ -117,18 +118,17 @@
 <script src="./scripts/downloadify.min.js"></script>
 <script src="./scripts/jquery.joyride-1.0.3.js"></script>
 <script src="./scripts/joyride.seven20grid.js"></script>
-<script src="./scripts/jsonld.js"></script>
 <script type="text/javascript">
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
 
-        remoteStorage.loadModule('root', 'rw');
+        remoteStorage.claimAccess('root', 'rw');
         remoteStorage.displayWidget('widget');
         remoteStorage.root.setOnChange(remoteStorageOnChange);
 
         $('#dataGrid').seven20Grid({});
-
         $('#dataGrid').seven20Navigator({});
+        $('#importer').seven20Porter({});
         loadDownloadifyButton();
 
         $('#joyrideTutorial').html(seven20GridTutorial);
