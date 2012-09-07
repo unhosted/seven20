@@ -1,18 +1,5 @@
 var seven20NavLinks = JSON.parse('[{"url":"about.htm", "name":"Home"},{"url":"index.html", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
 
-var modalHtml = '<div class="modal-header">' +
-    '<button type="button" class="close" data-dismiss="modal">×</button>' +
-    '<h3>##header##</h3>' +
-    '</div>' +
-    '<div class="modal-body">##body##</div>' +
-    '<div class="modal-footer">' +
-    '<a href="#" class="btn" data-dismiss="modal">Close</a>' +
-    '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
-    '</div>';
-var zipImportHtml = '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>';
-var jsonImportHtml = '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>';
-var fileToImport;
-
 function getData(request, callback, data, host, port)
 {
     makeAjax(request, callback, "GET", data, host, port);
@@ -92,6 +79,7 @@ function showGridData(path)
 function refreshTabs()
 {
     $('#dataGrid').seven20Navigator.refreshTabs();
+    $('#importer').seven20Porter({});
     loadDownloadifyButton();
 }
 
@@ -99,7 +87,7 @@ function loadDownloadifyButton()
 {
     Downloadify.create('downloadify',{
         data: function(){
-            return exportDataToZip().generate();
+            return $('#importer').seven20Porter.exportDataToZip().generate();
         },
         dataType: 'base64',
         filename: function(){

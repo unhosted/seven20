@@ -2,6 +2,17 @@
     $.fn.seven20Porter = function (options) {
         var defaultOptions =
         {
+            'modalHtml' : '<div class="modal-header">' +
+                '<button type="button" class="close" data-dismiss="modal">×</button>' +
+                '<h3>##header##</h3>' +
+                '</div>' +
+                '<div class="modal-body">##body##</div>' +
+                '<div class="modal-footer">' +
+                '<a href="#" class="btn" data-dismiss="modal">Close</a>' +
+                '<a href="#" class="btn btn-primary" id="importButton">Import</a>' +
+                '</div>',
+            'zipImportHtml': '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>',
+            'jsonImportHtml': '<input type="file" id="files" name="files[]"><p><input type="text" placeholder="folder to import to..." id="baseFolder"></p><div id="uploadObjects"></div>',
             'importerHtml':
                 '<div class="btn-group">' +
                 '<button class="btn btn-primary io-btn dropdown-toggle" data-toggle="dropdown">Import from file <span class="caret"></span></button>' +
@@ -21,7 +32,9 @@
                 '<p><p><button class="btn btn-danger io-btn" onclick="deleteAllLocalStorage(); return false;">Clear all local storage</button></p>' +
                 '<p><button class="btn btn-info io-btn" onclick="refreshTabs(); return false;">Refresh Folders</button></p></p>',
             'importZipFunction': null,
-            'importJSONFunction': null
+            'importJSONFunction': null,
+            'exportZipFunction': null,
+            'fileToImport': null
         };
         var o = $.extend(defaultOptions, options);
 
@@ -86,7 +99,7 @@
 
             function importJsonFile()
             {
-                importJsonObject('file', getBaseFolder(), fileToImport);
+                importJsonObject('file', getBaseFolder(), o.fileToImport);
 
                 $(this).prev().click();
                 refreshTabs();
@@ -101,7 +114,7 @@
 
             function importFromZip()
             {
-                $('#importModal').html(modalHtml.replace("##header##","Import from zip file").replace("##body##", zipImportHtml));
+                $('#importModal').html(o.modalHtml.replace("##header##","Import from zip file").replace("##body##", o.zipImportHtml));
                 $('#files').bind('change',handleZipFileSelect);
                 $('#importButton').attr('disabled', 'disabled');
                 $('#importModal').modal();
@@ -128,7 +141,7 @@
             {
                 var baseFolder = getBaseFolder();
 
-                $.each(fileToImport.files, function(k, v) {
+                $.each(o.fileToImport.files, function(k, v) {
                     if(k.charAt(k.length - 1) != '/')
                     {
                         var path = baseFolder + k.split('.')[0];
@@ -165,8 +178,8 @@
                     reader.onload = (function(theFile) {
                         return function(e) {
                             var s = e.target.result.replace(/(\r\n|\n|\r)/gm,"");
-                            fileToImport = JSON.parse(s);
-                            displayJsonImport(fileToImport);
+                            o.fileToImport = JSON.parse(s);
+                            displayJsonImport(o.fileToImport);
                             $('#importButton').bind('click',importJsonFile).removeAttr('disabled');
                         };
                     })(f);
@@ -197,7 +210,7 @@
                             var zip = new JSZip();
                             var data = e.target.result.split(',')[1];
                             zip.load(data, {base64:true});
-                            fileToImport = zip;
+                            o.fileToImport = zip;
                             parseZipFileToString(zip)
                             $("#importButton").bind('click',importZipFile).removeAttr('disabled');
                         };
@@ -219,13 +232,13 @@
 
             function importFromJSON()
             {
-                $('#importModal').html(modalHtml.replace("##header##","Import from json string").replace("##body##", jsonImportHtml));
+                $('#importModal').html(o.modalHtml.replace("##header##","Import from json string").replace("##body##", o.jsonImportHtml));
                 $('#files').bind('change',handleJsonFileSelect);
                 $('#importButton').attr('disabled', 'disabled');
                 $('#importModal').modal();
             }
 
-            function exportDataToZip()
+            $.fn.seven20Porter.exportDataToZip = function()
             {
                 var zip = new JSZip();
 
