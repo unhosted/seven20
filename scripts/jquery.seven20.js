@@ -1,4 +1,4 @@
-var seven20NavLinks = JSON.parse('[{"url":"about.htm", "name":"Home"},{"url":"index.html", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}]');
+var seven20NavLinks = JSON.parse('[{"url":"about.htm", "name":"Home"},{"url":"index.html", "name":"Manage"}, {"url":"dashboard.htm","name":"Dashboard"}, {"url":"profile.htm","name":"Profile"}]');
 
 function getData(request, callback, data, host, port)
 {
