@@ -122,7 +122,7 @@
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
 
-        remoteStorage.claimAccess('root', 'rw');
+        remoteStorage.claimAccess({'root':'rw'});
         remoteStorage.displayWidget('widget');
         remoteStorage.root.setOnChange(remoteStorageOnChange);
 
