@@ -110,7 +110,7 @@
 <script src="./scripts/jquery.seven20.porter.js"></script>
 <script src="./scripts/jquery.seven20.grid.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
-<script src="http://remotestoragejs.com/build/0.7.0-dp1/remoteStorage-debug.js"></script>
+<script src="http://remotestoragejs.com/build/0.7.0-dp2/remoteStorage-debug.js"></script>
 <script src="./scripts/root.js"></script>
 <script src="./scripts/jzip.js"></script>
 <script src="./scripts/jszip-load.js"></script>
@@ -121,6 +121,7 @@
 <script type="text/javascript">
     $().ready(function(){
         bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
+        $('a[href="profile.htm"]').attr('href')
 
         remoteStorage.claimAccess({'root':'rw'});
         remoteStorage.displayWidget('widget');
