@@ -3,7 +3,6 @@
         var defaultOptions =
         {
             'pictureHtml':  '<div class="">' +
-                            '<img id="profile_image">' +
                             '</div>',
             'fieldHtml' :   '<label>##heading##</label>' +
                             '<input id="##id##" type="text" placeholder="Type something…">',
@@ -28,7 +27,7 @@
                                 '</div></div>',
             'parent': '#profileSections',
             'showUpload': true,
-            'showPicture': true,
+            'showPicture': false,
             'sectionNames': ["Profile", "Name", "Location", "Upload vCard"],
             'sections': {
                             'Name':

@@ -18,9 +18,9 @@ var bootstrapNavHtml = '<div class="navbar navbar-fixed-top">' +
       '</div>' +
     '</div>';
 
-var bootstrapNavLinkHtml = '<li class="##class##"><a href="##url##">##name##</a></li>';
+var bootstrapNavLinkHtml = '<li class="##class##"><a href="##url##" name="##name##">##name##</a></li>';
 
-function bootstrapNav(target, projectName, links)
+function bootstrapNav(target, projectName, links, clickEvents)
 {
 	var navHtml = bootstrapNavHtml;
     var navLinks = "";
@@ -31,13 +31,21 @@ function bootstrapNav(target, projectName, links)
     if(links instanceof Array){
         for(i = 0; i < links.length; i++){
             var css = '';
+            var newLink = "";
             if(window.location.pathname.substr(window.location.pathname.lastIndexOf("/") + 1) == links[i].url)
                 css = "active";
-            navLinks += bootstrapNavLinkHtml.replace("##url##", links[i].url).replace("##class##", css).replace("##name##", links[i].name);
+            newLink = bootstrapNavLinkHtml.replace("##class##", css).replace(/##name##/g, links[i].name);
+            if(clickEvents != null && clickEvents[i] != null)
+            {
+                $(target).delegate('a[name="' + links[i].name + '"]','click', clickEvents[i]);
+                newLink = newLink.replace("##url##", "");
+            }
+            else
+                newLink = newLink.replace("##url##", links[i].url);
+            navLinks += newLink;
         }
     }
 
     navHtml = navHtml.replace(/##links##/g,navLinks);
-
 	$(target).html(navHtml);
 }

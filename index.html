@@ -85,12 +85,8 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div id="dataGrid">
-            <div id="gridUI" class="grid-height row-fluid">
-                <div id="sidebar" class="span1"></div>
-            </div>
-        </div>
+    <div id="widgetContainer" class="row-fluid">
+
     </div><!--/row-->
 
     <div id="joyrideTutorial"></div>
@@ -108,9 +104,11 @@
 <script src="./scripts/jquery.seven20.editor.js"></script>
 <script src="./scripts/jquery.seven20.navigator.js"></script>
 <script src="./scripts/jquery.seven20.porter.js"></script>
+<script src="./scripts/jquery.seven20.profile.js"></script>
 <script src="./scripts/jquery.seven20.grid.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
-<script src="http://remotestoragejs.com/build/0.7.0-dp2/remoteStorage-debug.js"></script>
+<script src="https://raw.github.com/RemoteStorage/remoteStorage.js/master/build//0.7.0-head/remoteStorage-modules-debug.js"></script>
+<script src="https://raw.github.com/RemoteStorage/remoteStorage.js/master/build/0.7.0-head/remoteStorage-debug.js"></script>
 <script src="./scripts/root.js"></script>
 <script src="./scripts/jzip.js"></script>
 <script src="./scripts/jszip-load.js"></script>
@@ -119,26 +117,87 @@
 <script src="./scripts/jquery.joyride-1.0.3.js"></script>
 <script src="./scripts/joyride.seven20grid.js"></script>
 <script type="text/javascript">
+    var widgets;
+
     $().ready(function(){
-        bootstrapNav('#topnav', 'Seven20', seven20NavLinks);
+        var seven20NavClickEvents = [buildAbout, buildSeven20Grid, buildDashboard, buildProfile];
+        bootstrapNav('#topnav', 'Seven20', seven20NavLinks, seven20NavClickEvents);
         $('a[href="profile.htm"]').attr('href')
 
-        remoteStorage.claimAccess({'root':'rw'});
-        remoteStorage.displayWidget('widget');
-        remoteStorage.root.setOnChange(remoteStorageOnChange);
 
-        $('#dataGrid').seven20Grid({});
-        $('#dataGrid').seven20Navigator({});
-        $('#importer').seven20Porter({});
-        loadDownloadifyButton();
+        widgets = $('#widgetContainer');
 
-        $('#joyrideTutorial').html(seven20GridTutorial);
-        $(this).joyride();
+        buildSeven20Grid();
     });
 
-    function remoteStorageOnChange(id, obj)
+    var dataGrid = '<div id="dataGrid">' +
+            '<div id="gridUI" class="grid-height row-fluid">' +
+            '<div id="sidebar" class="span1"></div>' +
+            '</div></div>';
+
+    var about = ' <div class="hero-unit">' +
+            '<h1>Seven20 - An Unhosted Data Management Interface</h1>' +
+            '<p>Managing your content should be easy, but the amount in which you can control your content should be endless. Take control of your data and decide who gets to access it, how they get to access it, and for how long they get to access it. Your data is yours, and now it is all under your own control -- all in one place! </p>' +
+            '<p><a class="btn btn-primary btn-large" href="index.html">See your data »</a></p></div>';
+
+    var dashboard = '<div id="public" class="span4"><h1>Public Data</h1></div>';
+
+    var profile = '<div id="profile" class="container">' +
+            '<div class="accordion" id="profileSections">' +
+            '</div></div>';
+
+    function buildDashboard()
     {
-        refreshTabs();
+        $(widgets).html(dashboard);
+
+        return false;
+    }
+
+    function buildAbout()
+    {
+        $(widgets).html(about);
+
+        return false;
+    }
+
+    function buildProfile()
+    {
+        //$('#joyrideTutorial').html();
+        $(widgets).html(profile);
+
+        setRemoteStorage({'contacts':'rw'}, null);
+        $('#profile').seven20Profile({});
+        //$(this).joyride();
+        return false;
+    }
+
+    function setRemoteStorage(modules, remoteStorageOnChange)
+    {
+        for(var i = 0; i < modules.length; ++i)
+        {
+            remoteStorage.claimAccess(modules[i]);
+        }
+
+        remoteStorage.displayWidget('widget');
+        remoteStorage.root.setOnChange(remoteStorageOnChange);
+    }
+
+    function buildSeven20Grid()
+    {
+        //$('#joyrideTutorial').html();
+
+        setRemoteStorage({'root':'rw'}, refreshTabs);
+        $(widgets).html(dataGrid);
+        $(widgets).find('#dataGrid').seven20Grid({});
+        $(widgets).find('#dataGrid').seven20Navigator({});
+        $(widgets).find('#importer').seven20Porter({});
+
+        loadDownloadifyButton();
+
+        //$('#joyrideTutorial').html(seven20GridTutorial);
+        //$(this).joyride();
+
+        return false;
     }
 </script>
 </body>
