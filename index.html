@@ -107,8 +107,8 @@
 <script src="./scripts/jquery.seven20.profile.js"></script>
 <script src="./scripts/jquery.seven20.grid.js"></script>
 <script src="./scripts/bootstrap.helper.js"></script>
-<script src="https://raw.github.com/RemoteStorage/remoteStorage.js/master/build//0.7.0-head/remoteStorage-modules-debug.js"></script>
-<script src="https://raw.github.com/RemoteStorage/remoteStorage.js/master/build/0.7.0-head/remoteStorage-debug.js"></script>
+<script src="http://remotestoragejs.com/build/0.7.0-head/remoteStorage-debug.js"></script>
+<script src="http://remotestoragejs.com/build/0.7.0-head/remoteStorage-modules-debug.js"></script>
 <script src="./scripts/root.js"></script>
 <script src="./scripts/jzip.js"></script>
 <script src="./scripts/jszip-load.js"></script>
@@ -165,7 +165,7 @@
         //$('#joyrideTutorial').html();
         $(widgets).html(profile);
 
-        setRemoteStorage({'contacts':'rw'}, null);
+        setRemoteStorage([{'contacts':'rw'}], null);
         $('#profile').seven20Profile({});
         //$(this).joyride();
         return false;
@@ -186,7 +186,7 @@
     {
         //$('#joyrideTutorial').html();
 
-        setRemoteStorage({'root':'rw'}, refreshTabs);
+        setRemoteStorage([{'root':'rw'}], refreshTabs);
         $(widgets).html(dataGrid);
         $(widgets).find('#dataGrid').seven20Grid({});
         $(widgets).find('#dataGrid').seven20Navigator({});
