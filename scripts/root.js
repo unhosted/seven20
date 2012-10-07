@@ -133,6 +133,7 @@ remoteStorage.defineModule('root', function(myPrivateBaseClient, myPublicBaseCli
 
     return {
         exports: {
+            use: function(path) { myPrivateBaseClient.use(path) },
             getListing: getListing,
             getObject: getObject,
             setObject: setObject,
